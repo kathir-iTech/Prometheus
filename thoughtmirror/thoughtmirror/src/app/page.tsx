@@ -5,8 +5,6 @@ import { Ring } from "@/components/lib/ring";
 import { ConceptMap } from "@/components/lib/concept-map";
 import { motion, AnimatePresence } from "framer-motion";
 
-const springTransition = { type: "spring" as const, stiffness: 300, damping: 30 };
-
 export default function Home() {
   const [originalText, setOriginalText] = useState("");
   const [currentText, setCurrentText] = useState("");
@@ -34,7 +32,6 @@ export default function Home() {
       context: string;
     };
   } | null>(null);
-  const [showLearningDelta, setShowLearningDelta] = useState(false);
   const [scanCount, setScanCount] = useState(0);
   const [scanError, setScanError] = useState<string | null>(null);
   const [hasScanned, setHasScanned] = useState(false);
@@ -65,7 +62,7 @@ export default function Home() {
         body: JSON.stringify({ text: currentText, sourceMaterial, isRescan: scanCount >= 1 }),
       });
 
-      let data: any = null;
+      let data: unknown = null;
       try {
         data = await res.json();
       } catch {
@@ -88,14 +85,13 @@ export default function Home() {
             ? prev
             : {
                 scores: data.scores || { rigor: 0, clarity: 0, evidence: 0 },
-                segments: data.segments.map((s: any) => ({
+                segments: data.segments.map((s: unknown) => ({
                   text: s.text,
                   type: s.type,
                   grounded: s.grounded ?? false,
                 })),
               }
         );
-        setShowLearningDelta(false);
         setHasScanned(true);
         setHasPendingEdits(false);
       } else {
@@ -485,8 +481,7 @@ const rings: ReactElement[] = [
                   result={latestScanResult}
                   onSocraticResponse={handleSocraticResponse}
                   scanCount={scanCount}
-                  setShowLearningDelta={setShowLearningDelta}
-                />
+                  />
 
                 {latestScanResult.segments.some((s) => s.type !== "normal") && (
                   <p className="text-xs text-zinc-400 mt-6" style={{ fontFamily: appleFont }}>
@@ -611,7 +606,7 @@ const rings: ReactElement[] = [
                     />
                     <div className="flex gap-3 mt-4">
                       <button
-                        onClick={() => setShowLearningDelta(false)}
+                        
                         className="flex-1 rounded-[12px] border border-zinc-200 bg-white px-4 py-2.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"
                         style={{ fontFamily: appleFont }}
                       >
@@ -635,19 +630,6 @@ const rings: ReactElement[] = [
           )}
         </AnimatePresence>
       </div>
-    </div>
-  );
-}
-
-function AnalysisSkeleton() {
-  return (
-    <div className="space-y-3" aria-busy="true" aria-live="polite">
-      <span className="sr-only">Analyzing your explanation…</span>
-      <div className="skeleton h-4 w-full" />
-      <div className="skeleton h-4 w-11/12" />
-      <div className="skeleton h-4 w-10/12" />
-      <div className="skeleton h-4 w-full" />
-      <div className="skeleton h-4 w-3/4" />
     </div>
   );
 }
@@ -676,7 +658,6 @@ type AnalysisDisplayProps = {
   };
   onSocraticResponse: (index: number, newText: string) => void;
   scanCount: number;
-  setShowLearningDelta: (show: boolean) => void;
 };
 
 function AnalysisDisplay({ result, onSocraticResponse }: AnalysisDisplayProps) {

@@ -1,13 +1,12 @@
 import { motion } from "framer-motion";
+import type { ReactButtonHTMLAttributes } from "react";
 
 export function Button({
   variant = "primary",
   className,
   ...props
-}: {
+}: ReactButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: "primary" | "secondary";
-  className?: string;
-  [key: string]: any;
 }) {
   const variantClasses = {
     primary:

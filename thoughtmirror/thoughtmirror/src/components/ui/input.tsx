@@ -1,3 +1,6 @@
+import { motion } from "framer-motion";
+import type { ReactInputHTMLAttributes } from "react";
+
 export function Input({
   type = "text",
   placeholder,
@@ -5,13 +8,12 @@ export function Input({
   onChange,
   className,
   ...props
-}: {
+}: ReactInputHTMLAttributes<HTMLInputElement> & {
   type?: string;
   placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
-  [key: string]: any;
 }) {
   return (
     <input

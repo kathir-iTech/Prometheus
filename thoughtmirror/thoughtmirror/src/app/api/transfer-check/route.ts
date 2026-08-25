@@ -55,7 +55,7 @@ export async function POST(request: Request) {
         },
       });
 
-      let result: any = { correctness: "incorrect", feedback: "Unable to evaluate." };
+      let result: Record<string, unknown> = { correctness: "incorrect" as const, feedback: "Unable to evaluate." };
 
       if (response.text) {
         try {
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
         status: 200,
         headers: { "Content-Type": "application/json" },
       });
-    } catch (geminiError: any) {
+    } catch (geminiError: unknown) {
       console.error("[transfer-check] Gemini API error:", geminiError);
       return new Response(
         JSON.stringify({ error: "Failed to evaluate transfer answer" }),
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
         }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[transfer-check] Unexpected error:", error);
     return new Response(
       JSON.stringify({ error: "Internal server error" }),

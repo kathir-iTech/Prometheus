@@ -106,9 +106,9 @@ Also extract 3-6 key concepts present or implied in the topic. For each, mark st
 If this is a rescan showing improved scores compared to a prior attempt, generate ONE transfer question that tests whether the student can apply their corrected understanding to a NEW, slightly different scenario or example than what they just wrote about — not a repeat of the same explanation. The question should require genuine application of the concept, not memorized recall of their own paragraph. Keep it concise, one question only. Format as a JSON object with "question" and "context" fields. Only include this field if the request has isRescan set to true.`;
 
     try {
-      let response: any = null;
+      let response: unknown = null;
       let modelUsed: string | null = null;
-      let lastError: any = null;
+      let lastError: unknown = null;
       const chainStart = Date.now();
 
       for (const model of MODEL_FALLBACK_CHAIN) {
@@ -136,7 +136,7 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
             `[analyze] Model ${model} succeeded after ${Date.now() - attemptStart}ms`
           );
           break;
-        } catch (geminiError: any) {
+} catch (geminiError: unknown) {
           // Fail over to the next model immediately on ANY failure
           // (429/RESOURCE_EXHAUSTED, 404, 400, network, etc.). The SDK retry
           // is disabled above (attempts:1), so a 429 is thrown straight away
@@ -177,7 +177,7 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
         `[analyze] Served by model: ${modelUsed} (chain total ${Date.now() - chainStart}ms)`
       );
 
-      let result: any = { scores: { rigor: 0, clarity: 0, evidence: 0 }, segments: [] };
+      let result: Record<string, unknown> = { scores: { rigor: 0 as number, clarity: 0 as number, evidence: 0 as number }, segments: [] };
 
       if (response.text) {
         try {
@@ -194,7 +194,7 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
       // CRITICAL: Ensure segments cover the ENTIRE input text exactly once, in order
       const validated = ensureFullCoverage(text, result.segments || [], result.scores);
 
-      const apiResponse: any = {
+      const apiResponse: Record<string, unknown> = {
         scores: validated.scores,
         segments: validated.segments,
       };
@@ -208,7 +208,7 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
         status: 200,
         headers: { "Content-Type": "application/json" },
       });
-    } catch (geminiError: any) {
+    } catch (geminiError: unknown) {
       // Log the Gemini API error details for debugging
       console.error("[analyze] Gemini API error:", geminiError);
       console.error("[analyze] Gemini API error.message:", geminiError.message);
@@ -225,7 +225,7 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
         }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Log unexpected errors
     console.error("[analyze] Unexpected error:", error);
     console.error("[analyze] Unexpected error.message:", error.message);
@@ -244,7 +244,7 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
   }
 }
 
-function isRateLimitError(error: any): boolean {
+function isRateLimitError(error: unknown): boolean {
   const status = error?.status ?? error?.code;
   if (status === 429 || status === "429") return true;
   const message = `${error?.message ?? ""}`.toLowerCase();
@@ -263,7 +263,7 @@ function isRateLimitError(error: any): boolean {
  * reattaching any discarded segment's type/label to the matching sentence. The end result
  * always concatenates back to the exact original input.
  */
-function ensureFullCoverage(original: string, segments: any[], scores: any): any {
+function ensureFullCoverage(original: string, segments: unknown[], scores: unknown): Record<string, unknown> {
   // If no segments, return the whole text as normal
   if (!segments || segments.length === 0) {
     return {
@@ -274,13 +274,13 @@ function ensureFullCoverage(original: string, segments: any[], scores: any): any
 
   // Normalize segments: ensure each has text and type
   const normalized = segments
-    .map((s: any) => ({
+    .map((s: unknown) => ({
       text: s.text != null ? String(s.text) : "",
       type: s.type || "normal",
       label: s.label,
       socratic_question: s.socratic_question,
     }))
-    .filter((s: any) => s.text.length > 0);
+    .filter((s: unknown) => s.text.length > 0);
 
   let offset = 0;
   const checked: Array<{
@@ -360,7 +360,7 @@ function ensureFullCoverage(original: string, segments: any[], scores: any): any
 
   // Map flagged segments to ensure label and socratic_question are present
   const resultSegments = checked.map((s) => {
-    const result: any = { text: s.text, type: s.type };
+    const result: Record<string, unknown> = { text: s.text, type: s.type };
     if (s.type !== "normal") {
       result.label = s.label || getLabel(s.type);
       result.socratic_question = s.socratic_question || getSocraticQuestion(s.type);
@@ -456,8 +456,8 @@ function findBestDiscardedMatch(
  * Safety net for the score scale: the model is instructed to return 0-100, but if it
  * ignores that and returns a 0-5 scale, scale up any score <= 5 to the 0-100 range.
  */
-function normalizeScores(scores: any): any {
-  const out: any = { ...scores };
+function normalizeScores(scores: unknown): unknown {
+  const out: Record<string, unknown> = { ...scores };
   for (const key of ["rigor", "clarity", "evidence"]) {
     if (typeof out[key] === "number" && out[key] <= 5) {
       out[key] = Math.round(out[key] * 20);

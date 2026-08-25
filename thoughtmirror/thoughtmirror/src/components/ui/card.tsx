@@ -1,11 +1,13 @@
+import { motion } from "framer-motion";
+import type { ReactClassAttributes } from "react";
+
 export function Card({
   className,
   children,
   ...props
-}: {
+}: ReactClassAttributes<HTMLDivElement> & {
   className?: string;
   children: React.ReactNode;
-  [key: string]: any;
 }) {
   return (
     <div
