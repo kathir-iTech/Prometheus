@@ -7,8 +7,30 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const [currentText, setCurrentText] = useState("");
-  const [firstScanResult, setFirstScanResult] = useState<any>(null); // eslint-disable-line no-explicit-any
-  const [latestScanResult, setLatestScanResult] = useState<any>(null); // eslint-disable-line no-explicit-any
+  const [firstScanResult, setFirstScanResult] = useState<{
+    scores: { rigor: number; clarity: number; evidence: number };
+    segments: Array<{ text: string; type: string }>;
+  } | null>(null);
+  const [latestScanResult, setLatestScanResult] = useState<{
+    scores: { rigor: number; clarity: number; evidence: number };
+    segments: Array<{
+      text: string;
+      type: "normal" | "reasoning_error" | "knowledge_gap" | "unsupported_claim" | "strong";
+      label?: string;
+      socratic_question?: string;
+      grounded?: boolean;
+    }>;
+    concepts?: Array<{
+      id: string;
+      label: string;
+      status: "solid" | "gap" | "error";
+      relatedTo: string[];
+    }>;
+    transferQuestion?: {
+      question: string;
+      context: string;
+    };
+  } | null>(null);
   const [scanCount, setScanCount] = useState(0);
   const [scanError, setScanError] = useState<string | null>(null);
   const [hasScanned, setHasScanned] = useState(false);
