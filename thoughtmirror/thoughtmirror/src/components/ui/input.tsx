@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import type { ReactInputHTMLAttributes } from "react";
 
 export function Input({

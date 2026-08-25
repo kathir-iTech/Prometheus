@@ -144,7 +144,7 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
           const elapsed = Date.now() - attemptStart;
           const rateLimited = isRateLimitError(geminiError);
           console.error(
-            `[analyze] Model ${model} failed after ${elapsed}ms (rateLimit=${rateLimited}). Reason: ${geminiError?.message}`
+            `[analyze] Model ${model} failed after ${elapsed}ms (rateLimit=${rateLimited}). Reason: ${geminiError instanceof Error ? geminiError.message : String(geminiError)}`
           );
           lastError = geminiError;
           continue;

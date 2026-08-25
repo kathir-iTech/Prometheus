@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import type { ReactClassAttributes } from "react";
 
 export function Card({

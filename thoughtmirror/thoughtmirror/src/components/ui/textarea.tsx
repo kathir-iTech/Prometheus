@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import type { ReactTextareaHTMLAttributes } from "react";
 
 export function Textarea({

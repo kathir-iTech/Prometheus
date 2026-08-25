@@ -6,7 +6,6 @@ import { ConceptMap } from "@/components/lib/concept-map";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
-  const [originalText, setOriginalText] = useState("");
   const [currentText, setCurrentText] = useState("");
   const [firstScanResult, setFirstScanResult] = useState<{
     scores: { rigor: number; clarity: number; evidence: number };
@@ -122,7 +121,6 @@ export default function Home() {
   };
 
   const handleMagicSample = () => {
-    setOriginalText(magicSample);
     setCurrentText(magicSample);
   };
 
