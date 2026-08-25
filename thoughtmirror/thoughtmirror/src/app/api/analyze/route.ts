@@ -179,9 +179,9 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
 
       let result: Record<string, unknown> = { scores: { rigor: 0 as number, clarity: 0 as number, evidence: 0 as number }, segments: [] };
 
-      if ((response as any).text) {
+      if (response?.text) {
         try {
-          result = JSON.parse((response as any).text);
+          result = JSON.parse(response.text);
         } catch {
           result = { scores: { rigor: 0, clarity: 0, evidence: 0 }, segments: [] };
         }
@@ -192,7 +192,7 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
       }
 
       // CRITICAL: Ensure segments cover the ENTIRE input text exactly once, in order
-      const validated = ensureFullCoverage(text, ((result as any).segments) || [], (result as any).scores);
+      const validated = ensureFullCoverage(text, result.segments || [], result.scores);
 
       const apiResponse: Record<string, unknown> = {
         scores: validated.scores,

@@ -7,8 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export default function Home() {
   const [currentText, setCurrentText] = useState("");
-  const [firstScanResult, setFirstScanResult] = useState<any>(null);
-  const [latestScanResult, setLatestScanResult] = useState<any>(null);
+  const [firstScanResult, setFirstScanResult] = useState<any>(null); // eslint-disable-line no-explicit-any
+  const [latestScanResult, setLatestScanResult] = useState<any>(null); // eslint-disable-line no-explicit-any
   const [scanCount, setScanCount] = useState(0);
   const [scanError, setScanError] = useState<string | null>(null);
   const [hasScanned, setHasScanned] = useState(false);
