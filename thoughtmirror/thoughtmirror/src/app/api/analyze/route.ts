@@ -192,8 +192,9 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
       }
 
       // CRITICAL: Ensure segments cover the ENTIRE input text exactly once, in order
-      const rawResult = result as any;
-      const validated = ensureFullCoverage(text, rawResult.segments || [], rawResult.scores);
+const rawResult = result as any;
+const validated = ensureFullCoverage(text, (rawResult.segments || []) as any[], rawResult.scores);
+
 
       const apiResponse: Record<string, unknown> = {
         scores: validated.scores,
