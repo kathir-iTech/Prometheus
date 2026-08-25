@@ -155,7 +155,7 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
         const totalMs = Date.now() - chainStart;
         console.error(
           `[analyze] All ${MODEL_FALLBACK_CHAIN.length} models failed after ${totalMs}ms. Last error:`,
-          lastError?.message
+          lastError instanceof Error ? lastError.message : String(lastError)
         );
         const rateLimited = isRateLimitError(lastError);
         return new Response(
@@ -163,7 +163,7 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
             error: rateLimited
               ? "All available AI models have reached their daily limit (quota exhausted). Please use a fresh API key or try again later."
               : "Failed to analyze text with Gemini AI.",
-            details: lastError?.message,
+            details: lastError instanceof Error ? lastError.message : String(lastError),
             allModelsFailed: true,
           }),
           {
