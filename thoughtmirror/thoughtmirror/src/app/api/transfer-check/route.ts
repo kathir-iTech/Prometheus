@@ -57,7 +57,7 @@ export async function POST(request: Request) {
 
       let result: Record<string, unknown> = { correctness: "incorrect" as const, feedback: "Unable to evaluate." };
 
-      if (response?.text) {
+      if ((response as unknown as any).text) {
         try {
           result = JSON.parse(response.text);
         } catch {

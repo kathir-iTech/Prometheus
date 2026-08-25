@@ -179,9 +179,9 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
 
       let result: Record<string, unknown> = { scores: { rigor: 0 as number, clarity: 0 as number, evidence: 0 as number }, segments: [] };
 
-      if (response?.text) {
+      if ((response as unknown as any).text) {
         try {
-          result = JSON.parse(response.text);
+          result = JSON.parse((response as unknown as any).text);
         } catch {
           result = { scores: { rigor: 0, clarity: 0, evidence: 0 }, segments: [] };
         }
