@@ -230,7 +230,8 @@ export default function Home() {
 
 const renderRings = () => {
     if (!latestScanResult) return null;
-const rings: ReactElement[] = [
+
+    const latestSet: ReactElement[] = [
       <motion.div key="rigor" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, ease: "easeOut" as const }}>
         <Ring title="Rigor" value={latestScanResult.scores.rigor ?? 0} max={100} />
       </motion.div>,
@@ -243,7 +244,7 @@ const rings: ReactElement[] = [
     ];
 
     if (shouldShowLearningDelta && firstScanResult) {
-      rings.push(
+      const historicalSet: ReactElement[] = [
         <motion.div key="rigor-base">
           <Ring title="Rigor" value={firstScanResult.scores.rigor ?? 0} max={100} />
         </motion.div>,
@@ -253,9 +254,34 @@ const rings: ReactElement[] = [
         <motion.div key="evidence-base">
           <Ring title="Evidence" value={firstScanResult.scores.evidence ?? 0} max={100} />
         </motion.div>
+      ];
+      return (
+        <div className="flex flex-col items-center gap-8">
+          <div className="flex flex-col items-center">
+            <p className="text-xs font-medium tracking-wide uppercase text-zinc-500 mb-4" style={{ fontFamily: appleFont }}>
+              Latest
+            </p>
+            <div className="flex flex-wrap justify-center gap-10 sm:gap-12">
+              {latestSet}
+            </div>
+          </div>
+          <div className="flex flex-col items-center opacity-50 scale-90">
+            <p className="text-xs font-medium tracking-wide uppercase text-zinc-500 mb-4" style={{ fontFamily: appleFont }}>
+              First attempt
+            </p>
+            <div className="flex flex-wrap justify-center gap-10 sm:gap-12">
+              {historicalSet}
+            </div>
+          </div>
+        </div>
       );
     }
-    return rings;
+
+    return (
+      <div className="flex flex-wrap justify-center gap-10 sm:gap-12">
+        {latestSet}
+      </div>
+    );
   };
 
   const appleFont = `-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif`;
