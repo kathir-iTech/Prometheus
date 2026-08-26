@@ -382,14 +382,18 @@ export default function Home() {
         {/* Step 1: Explain */}
         {!hasScanned && !isScanning && (
           <div className={cardClass}>
-            <h2 className="text-xl font-semibold text-zinc-100 mb-1">
-              Explain a concept
-            </h2>
+            <div className="flex items-center gap-3 mb-1">
+              <ZenoAvatar size={64} expression="neutral" />
+              <h2 className="text-xl font-semibold text-zinc-100">
+                Teach Zeno about...
+              </h2>
+            </div>
             <p className="text-sm text-zinc-500 mb-5">
-              In your own words — no right answer yet, just your thinking.
+              Zeno has never heard of this before. Explain it to him in your
+              own words — no right answer yet, just your thinking.
             </p>
             <textarea
-              placeholder="Explain a concept in your own words..."
+              placeholder="Explain it to Zeno like he's never heard of it before..."
               value={currentText}
               onChange={(e) => setCurrentText(e.target.value)}
               readOnly={isScanning}
@@ -453,9 +457,19 @@ export default function Home() {
         {/* Step 3: Results */}
         {hasScanned && !isScanning && !shouldShowLearningDelta && (
           <div className={cardClass}>
-            <h2 className="text-xl font-semibold text-zinc-100 mb-5">
-              What we found
-            </h2>
+            <div className="flex items-center gap-3 mb-5">
+              <ZenoAvatar
+                size={56}
+                expression={getZenoExpression(latestScanResult?.scores)}
+              />
+              <h2 className="text-xl font-semibold text-zinc-100">
+                What we found
+              </h2>
+            </div>
+
+            <p className="text-xs uppercase tracking-widest text-zinc-500 mb-3">
+              Zeno&apos;s understanding
+            </p>
 
             <div className="grid grid-cols-3 gap-4 mb-2">
               <StatBar label="Rigor" value={latestScanResult?.scores?.rigor ?? 0} />
@@ -473,7 +487,7 @@ export default function Home() {
             {!latestScanResult?.scores?.confidence && <div className="mb-6" />}
 
             <h3 className="text-sm font-medium uppercase tracking-widest text-zinc-500 mb-3">
-              Analysis
+              What Zeno heard
             </h3>
             <div
               className="leading-relaxed text-zinc-100 text-[15px]"
@@ -545,11 +559,26 @@ export default function Home() {
         {/* Step 4: Measure / Learning Delta */}
         {shouldShowLearningDelta && latestScanResult && firstScanResult && (
           <div className={cardClass}>
-            <h2 className="text-xl font-semibold text-zinc-100 mb-1">
-              Learning delta
-            </h2>
+            <div className="flex items-center gap-3 mb-1">
+              <ZenoAvatar
+                size={56}
+                expression={getZenoExpression(latestScanResult?.scores)}
+              />
+              <h2 className="text-xl font-semibold text-zinc-100">
+                Zeno finally gets it
+              </h2>
+            </div>
             <p className="text-sm text-zinc-500 mb-6">
               Your scores compared with your first attempt.
+            </p>
+
+            <p className="text-sm text-zinc-300 mb-4">
+              {firstScanResult.segments.filter(
+                (s, i) =>
+                  s.type !== "normal" &&
+                  latestScanResult.segments[i]?.type === "normal"
+              ).length}{" "}
+              things Zeno now understands
             </p>
 
             <div className="grid grid-cols-3 gap-4 mb-2">
@@ -780,9 +809,15 @@ function SocraticModal({
         transition={{ duration: 0.18 }}
         style={{ fontFamily: appleFont }}
       >
-        <h3 className="text-xl font-semibold text-zinc-100 mb-2">
-          Repair this reasoning
-        </h3>
+        <div className="flex items-center gap-3 mb-2">
+          <ZenoAvatar
+            size={48}
+            expression={getZenoExpression(latestScanResult?.scores)}
+          />
+          <h3 className="text-xl font-semibold text-zinc-100">
+            Zeno is confused
+          </h3>
+        </div>
         {showIntro && (
           <p className="mb-4 rounded-lg border border-violet-400/20 bg-violet-500/10 px-3 py-2 text-xs leading-relaxed text-violet-300">
             We won’t give you the answer — answer this question in your own
@@ -821,5 +856,106 @@ function SocraticModal({
         </div>
       </motion.div>
     </motion.div>
+  );
+}
+
+type ZenoExpression = "confused" | "neutral" | "happy";
+
+function getZenoExpression(
+  scores?: {
+    rigor: number;
+    clarity: number;
+    evidence: number;
+    confidence?: "high" | "moderate" | "low";
+  } | null
+): ZenoExpression {
+  if (!scores) return "neutral";
+  const avg =
+    (scores.rigor + scores.clarity + scores.evidence) / 3;
+  if (avg < 40) return "confused";
+  if (avg > 70) return "happy";
+  return "neutral";
+}
+
+function ZenoAvatar({
+  size = 64,
+  expression = "neutral",
+}: {
+  size?: number;
+  expression?: ZenoExpression;
+}) {
+  const faceColor = "#9d7bf5";
+  const ink = "#1c1230";
+
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      role="img"
+      aria-label={`Zeno looks ${expression}`}
+      style={{ flexShrink: 0 }}
+    >
+      <circle cx="50" cy="50" r="47" fill={faceColor} />
+      {expression === "confused" && (
+        <>
+          <line
+            x1="30"
+            y1="40"
+            x2="42"
+            y2="46"
+            stroke={ink}
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+          <line
+            x1="70"
+            y1="40"
+            x2="58"
+            y2="46"
+            stroke={ink}
+            strokeWidth="4"
+            strokeLinecap="round"
+          />
+          <line
+            x1="38"
+            y1="68"
+            x2="62"
+            y2="68"
+            stroke={ink}
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+        </>
+      )}
+      {expression === "neutral" && (
+        <>
+          <circle cx="36" cy="44" r="4" fill={ink} />
+          <circle cx="64" cy="44" r="4" fill={ink} />
+          <line
+            x1="40"
+            y1="68"
+            x2="60"
+            y2="68"
+            stroke={ink}
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+        </>
+      )}
+      {expression === "happy" && (
+        <>
+          <circle cx="36" cy="44" r="4" fill={ink} />
+          <circle cx="64" cy="44" r="4" fill={ink} />
+          <path
+            d="M38 64 Q50 76 62 64"
+            stroke={ink}
+            strokeWidth="3"
+            fill="none"
+            strokeLinecap="round"
+          />
+        </>
+      )}
+    </svg>
   );
 }

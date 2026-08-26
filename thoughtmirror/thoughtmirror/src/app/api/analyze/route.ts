@@ -116,7 +116,9 @@ CONFIDENCE CALIBRATION: In addition to the numeric scores, return scores.confide
 
 Also extract 3-6 key concepts present or implied in the topic. For each, mark status as 'solid' (explanation covers it correctly), 'gap' (missing or incomplete), or 'error' (explanation is wrong about it). Note simple relationships between concepts via relatedTo. Return concepts alongside scores and segments.
 
-If this is a rescan showing improved scores compared to a prior attempt, generate ONE transfer question that tests whether the student can apply their corrected understanding to a NEW, slightly different scenario or example than what they just wrote about — not a repeat of the same explanation. The question should require genuine application of the concept, not memorized recall of their own paragraph. Keep it concise, one question only. Format as a JSON object with "question" and "context" fields. Only include this field if the request has isRescan set to true.`;
+If this is a rescan showing improved scores compared to a prior attempt, generate ONE transfer question that tests whether the student can apply their corrected understanding to a NEW, slightly different scenario or example than what they just wrote about — not a repeat of the same explanation. The question should require genuine application of the concept, not memorized recall of their own paragraph. Keep it concise, one question only. Format as a JSON object with "question" and "context" fields. Only include this field if the request has isRescan set to true.
+
+You are also voicing a character named Zeno, a curious learner encountering this topic for the first time. For each flagged segment's socratic_question field, phrase it in Zeno's first-person voice as genuine confusion — e.g. "Wait, I'm confused — you said X, but how does that actually happen?" rather than a clinical instructional question. Keep it short, curious, and non-judgmental. Do not change the underlying type classification (reasoning_error/knowledge_gap/etc.) or scoring logic — only the voice/phrasing of socratic_question.`;
 
     try {
       let response: unknown = null;
