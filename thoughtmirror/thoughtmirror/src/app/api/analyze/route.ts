@@ -1,11 +1,16 @@
 import { GoogleGenAI, Type } from "@google/genai";
 
 const MODEL_FALLBACK_CHAIN = [
-  "gemini-3.6-flash",
   "gemini-3.1-flash-lite",
   "gemini-3.5-flash-lite",
+  "gemini-3.6-flash",
   "gemini-3.7-flash",
 ];
+
+// Hard ceiling for a single model attempt: if one model stalls past this,
+// abort it and fall through to the next model immediately instead of
+// blocking the request indefinitely.
+const ATTEMPT_TIMEOUT_MS = 15_000;
 
 // Temporary debug: verify env var loading
 console.log(`[analyze] GOOGLE_API_KEY length: ${process.env.GOOGLE_API_KEY?.length || 0}`);
@@ -121,12 +126,18 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
 
       for (const model of MODEL_FALLBACK_CHAIN) {
         const attemptStart = Date.now();
-        console.log(`[analyze] Trying ${model}...`);
+        const attemptController = new AbortController();
+        const attemptTimer = setTimeout(
+          () => attemptController.abort(),
+          ATTEMPT_TIMEOUT_MS
+        );
+        console.log(`[analyze] Trying ${model} (hard limit ${ATTEMPT_TIMEOUT_MS}ms)...`);
         try {
           response = await ai.models.generateContent({
             model,
             contents: text,
             config: {
+              abortSignal: attemptController.signal,
               responseMimeType: "application/json",
               responseSchema,
               systemInstruction: SYSTEM_INSTRUCTION,
@@ -139,20 +150,19 @@ If this is a rescan showing improved scores compared to a prior attempt, generat
               httpOptions: { retryOptions: { attempts: 1 } },
             },
           });
+          clearTimeout(attemptTimer);
           modelUsed = model;
           console.log(
             `[analyze] Model ${model} succeeded after ${Date.now() - attemptStart}ms`
           );
           break;
 } catch (geminiError: unknown) {
-          // Fail over to the next model immediately on ANY failure
-          // (429/RESOURCE_EXHAUSTED, 404, 400, network, etc.). The SDK retry
-          // is disabled above (attempts:1), so a 429 is thrown straight away
-          // and we never block on the API's suggested retryDelay here.
+          clearTimeout(attemptTimer);
           const elapsed = Date.now() - attemptStart;
+          const timedOut = attemptController.signal.aborted;
           const rateLimited = isRateLimitError(geminiError);
           console.error(
-            `[analyze] Model ${model} failed after ${elapsed}ms (rateLimit=${rateLimited}). Reason: ${geminiError instanceof Error ? geminiError.message : String(geminiError)}`
+            `[analyze] Model ${model} ${timedOut ? `TIMED OUT after ${ATTEMPT_TIMEOUT_MS}ms` : `failed after ${elapsed}ms (rateLimit=${rateLimited})`}. Reason: ${geminiError instanceof Error ? geminiError.message : String(geminiError)}`
           );
           lastError = geminiError;
           continue;

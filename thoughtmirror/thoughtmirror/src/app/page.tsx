@@ -60,6 +60,19 @@ export default function Home() {
     text: string;
   } | null>(null);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [hasSeenSocraticIntro, setHasSeenSocraticIntro] = useState(false);
+  const [showSocraticIntro, setShowSocraticIntro] = useState(false);
+
+  const openSegment = (index: number) => {
+    setOpenIndex(index);
+    setShowSocraticIntro(!hasSeenSocraticIntro);
+  };
+
+  const closeSocratic = () => {
+    if (showSocraticIntro) setHasSeenSocraticIntro(true);
+    setShowSocraticIntro(false);
+    setOpenIndex(null);
+  };
 
   const magicSample = `Neural networks are made of brain cells called neurons that fire electricity. When we think, the neurons send signals to each other through synopses. This is how we learn things and remember them forever. The brain is like a computer made of meat.`;
 
@@ -217,10 +230,15 @@ export default function Home() {
     setTransferAnswer("");
     setTransferFeedback(null);
     setOpenIndex(null);
+    setShowSocraticIntro(false);
+    setHasSeenSocraticIntro(false);
   };
 
   const shouldShowLearningDelta =
     scanCount >= 2 && latestScanResult && firstScanResult;
+
+  const firstFlaggedIndex =
+    latestScanResult?.segments.findIndex((s) => s.type !== "normal") ?? -1;
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -474,16 +492,25 @@ export default function Home() {
                       paddingInline: 4,
                       borderRadius: 4,
                     };
-                const onClick = isNormal ? undefined : () => setOpenIndex(i);
+                const onClick = isNormal ? undefined : () => openSegment(i);
                 return (
-                  <span
-                    key={i}
-                    style={segmentStyle}
-                    onClick={onClick}
-                    role={isNormal ? undefined : "button"}
-                    className="cursor-pointer hover:opacity-80 transition-opacity"
-                  >
-                    {seg.text}
+                  <span key={i}>
+                    {i === firstFlaggedIndex && (
+                      <span
+                        role="button"
+                        onClick={() => openSegment(i)}
+                        title="Start here — click the highlighted phrase to repair it"
+                        className="pulse-dot mr-1.5 inline-block h-2 w-2 cursor-pointer rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.9)] align-baseline"
+                      />
+                    )}
+                    <span
+                      style={segmentStyle}
+                      onClick={onClick}
+                      role={isNormal ? undefined : "button"}
+                      className="cursor-pointer hover:opacity-80 transition-opacity"
+                    >
+                      {seg.text}
+                    </span>
                   </span>
                 );
               })}
@@ -497,7 +524,7 @@ export default function Home() {
               <span className="text-sm text-zinc-500">
                 {hasPendingEdits
                   ? "Repaired — re-analyze to measure progress."
-                  : "Repair issues above, then re-analyze to see your growth."}
+                  : "👆 Click a highlighted phrase above to start repairing your explanation"}
               </span>
               <button
                 onClick={handleScan}
@@ -632,10 +659,11 @@ export default function Home() {
             key="socratic"
             segment={latestScanResult.segments[openIndex]}
             index={openIndex}
-            onClose={() => setOpenIndex(null)}
+            showIntro={showSocraticIntro}
+            onClose={closeSocratic}
             onSubmit={(text) => {
               handleSocraticResponse(openIndex, text);
-              setOpenIndex(null);
+              closeSocratic();
             }}
           />
         )}
@@ -711,6 +739,7 @@ function DeltaBar({
 function SocraticModal({
   segment,
   index,
+  showIntro,
   onClose,
   onSubmit,
 }: {
@@ -721,6 +750,7 @@ function SocraticModal({
     socratic_question?: string;
   };
   index: number;
+  showIntro: boolean;
   onClose: () => void;
   onSubmit: (text: string) => void;
 }) {
@@ -753,6 +783,12 @@ function SocraticModal({
         <h3 className="text-xl font-semibold text-zinc-100 mb-2">
           Repair this reasoning
         </h3>
+        {showIntro && (
+          <p className="mb-4 rounded-lg border border-violet-400/20 bg-violet-500/10 px-3 py-2 text-xs leading-relaxed text-violet-300">
+            We won’t give you the answer — answer this question in your own
+            words, then we’ll re-score your explanation.
+          </p>
+        )}
         <p className="text-sm text-zinc-400 leading-relaxed mb-4">
           {segment.socratic_question ||
             "Rewrite this part to address the issue in your own words."}
