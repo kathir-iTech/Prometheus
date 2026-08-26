@@ -19,8 +19,12 @@ const responseSchema = {
         rigor: { type: Type.NUMBER },
         clarity: { type: Type.NUMBER },
         evidence: { type: Type.NUMBER },
+        confidence: {
+          type: Type.STRING,
+          enum: ["high", "moderate", "low"],
+        },
       },
-      required: ["rigor", "clarity", "evidence"],
+      required: ["rigor", "clarity", "evidence", "confidence"],
     },
     segments: {
       type: Type.ARRAY,
@@ -101,6 +105,10 @@ export async function POST(request: Request) {
 CRITICAL: Segment the text at sentence boundaries. Each segment should cover approximately one sentence or one distinct clause. Do NOT merge multiple sentences into a single segment. For a 6-sentence paragraph, return 5-8 segments, not 1-2. Prioritize granularity over brevity in segmentation.
 
 ${sourceMaterialInstructions}
+ACCURACY OVER FLUENCY: A confident, fluent explanation that is factually WRONG must score low (0-25 range for rigor/evidence) even if well-written — fluency must never substitute for correctness. Flag factually wrong segments as reasoning_error, not strong.
+
+CONFIDENCE CALIBRATION: In addition to the numeric scores, return scores.confidence as "high", "moderate", or "low" based on how complete and specific the explanation is. A brief or vague explanation must get "low" confidence even if surface-level correct; a thorough, specific, well-evidenced explanation earns "high"; anything in between is "moderate".
+
 Also extract 3-6 key concepts present or implied in the topic. For each, mark status as 'solid' (explanation covers it correctly), 'gap' (missing or incomplete), or 'error' (explanation is wrong about it). Note simple relationships between concepts via relatedTo. Return concepts alongside scores and segments.
 
 If this is a rescan showing improved scores compared to a prior attempt, generate ONE transfer question that tests whether the student can apply their corrected understanding to a NEW, slightly different scenario or example than what they just wrote about — not a repeat of the same explanation. The question should require genuine application of the concept, not memorized recall of their own paragraph. Keep it concise, one question only. Format as a JSON object with "question" and "context" fields. Only include this field if the request has isRescan set to true.`;

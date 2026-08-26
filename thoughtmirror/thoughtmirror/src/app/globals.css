@@ -96,14 +96,38 @@ hr {
   animation: pulse-dot 1.8s ease-in-out infinite;
 }
 
-/* Subtle border breathing effect for scanning state */
-@keyframes border-breathing {
-  0%, 100% { border-color: rgba(255, 255, 255, 0.4); }
-  50%      { border-color: rgba(79, 70, 229, 0.3); }
+/* ============================================================
+   Scanning state: soft pulsing violet glow breathing across the
+   entire input card border (2.5s loop), violet-400/20 <-> /50
+   ============================================================ */
+@keyframes violet-border-pulse {
+  0%, 100% { border-color: rgba(167, 139, 250, 0.2); }
+  50%      { border-color: rgba(167, 139, 250, 0.5); }
 }
 
-.border-breathing {
-  animation: border-breathing 3s ease-in-out infinite;
+.violet-border-pulse {
+  animation: violet-border-pulse 2.5s ease-in-out infinite;
+}
+
+/* Data particles rising inside the scanning card: small violet-300
+   dots drifting upward and fading out. Subtle, not busy. */
+@keyframes particle-rise {
+  0%   { transform: translateY(0); opacity: 0; }
+  12%  { opacity: 0.55; }
+  80%  { opacity: 0.15; }
+  100% { transform: translateY(-190px); opacity: 0; }
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 9999px;
+  background: #c4b5fd; /* violet-300 */
+  animation-name: particle-rise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  pointer-events: none;
 }
 
 .ring-accent .stroke-primary {
