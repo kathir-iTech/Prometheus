@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   typescript: {
+    // temporary for deadline, TODO: fix strict types post-submission
     ignoreBuildErrors: true,
   },
 };
