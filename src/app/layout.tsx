@@ -5,29 +5,29 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#05070b",
+  themeColor: "#ffffff",
 };
 
 export const metadata: Metadata = {
   title: {
-    default: "Prometheus Multi-Agent AI Swarm Engine",
-    template: "%s | Prometheus Swarm",
+    default: "VivaMind — Socratic Argumentation Engine",
+    template: "%s | VivaMind",
   },
   description:
-    "Enterprise-grade multi-agent swarm for real-time code analysis, security scanning, and optimization intelligence. Architect, Security & Optimization agents streaming via SSE on Next.js 15.",
-  metadataBase: new URL("https://prometheus-swarm.local"),
+    "VivaMind is a Socratic argumentation engine. Students submit an argument, the system flags its weakest point and asks one question — it never states the missing evidence.",
+  metadataBase: new URL("https://vivamind.local"),
   openGraph: {
-    title: "Prometheus Multi-Agent AI Swarm Engine",
+    title: "VivaMind — Socratic Argumentation Engine",
     description:
-      "Enterprise-grade multi-agent swarm for real-time code analysis, security scanning, and optimization intelligence.",
-    url: "https://prometheus-swarm.local",
-    siteName: "Prometheus Swarm",
+      "VivaMind is a Socratic argumentation engine. Students submit an argument, the system flags its weakest point and asks one question.",
+    url: "https://vivamind.local",
+    siteName: "VivaMind",
     images: [
       {
-        url: "/prometheus-social.png",
+        url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Prometheus Multi-Agent AI Swarm Engine – live code intelligence",
+        alt: "VivaMind — Socratic argumentation engine",
       },
     ],
     locale: "en_US",
@@ -35,23 +35,20 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Prometheus Multi-Agent AI Swarm Engine",
+    title: "VivaMind — Socratic Argumentation Engine",
     description:
-      "Enterprise-grade multi-agent swarm for real-time code analysis, security scanning, and optimization intelligence.",
-    images: ["/prometheus-social.png"],
+      "VivaMind is a Socratic argumentation engine. Students submit an argument, the system flags its weakest point and asks one question.",
+    images: ["/og.png"],
   },
-  authors: [{ name: "Prometheus AI" }],
-  category: "technology",
+  authors: [{ name: "VivaMind" }],
+  category: "education",
   keywords: [
-    "multi-agent",
-    "AI swarm",
-    "code analysis",
-    "security scanning",
-    "optimization",
+    "socratic",
+    "argumentation",
+    "education",
+    "critical thinking",
+    "VivaMind",
     "Next.js 15",
-    "Prometheus",
-    "AST",
-    "cyclomatic complexity",
   ],
   robots: {
     index: true,
@@ -63,13 +60,13 @@ function JsonLd() {
   const data = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "Prometheus Multi-Agent AI Swarm Engine",
+    name: "VivaMind",
     description:
-      "Enterprise-grade multi-agent swarm for real-time code analysis, security scanning, and optimization intelligence.",
-    applicationCategory: "DeveloperApplication",
+      "Socratic argumentation engine that flags the weakest point of a student argument and asks one question without revealing the answer.",
+    applicationCategory: "EducationApplication",
     operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-    author: { "@type": "Organization", name: "Prometheus AI" },
+    author: { "@type": "Organization", name: "VivaMind" },
   };
   return (
     <script

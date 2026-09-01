@@ -59,7 +59,7 @@ export function middleware(req: NextRequest) {
 
   const path = req.nextUrl.pathname;
 
-  if (path.startsWith("/api/swarm") || path.startsWith("/api/analyze")) {
+  if (path.startsWith("/api/analyze") || path.startsWith("/api/verdict")) {
     const resp = NextResponse.next();
     return withSecurityHeaders(resp);
   }
@@ -68,5 +68,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/api/swarm/:path*", "/api/analyze/:path*"],
+  matcher: ["/api/analyze/:path*", "/api/verdict/:path*"],
 };
