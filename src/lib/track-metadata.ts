@@ -9,6 +9,7 @@ export interface TrackMetadata {
   id: TrackId;
   title: string;
   rubricCriteria: string[];
+  ungraded?: boolean;
 }
 
 export const TRACK_METADATA: TrackMetadata[] = [
@@ -26,5 +27,11 @@ export const TRACK_METADATA: TrackMetadata[] = [
     id: 'policy_evaluation',
     title: 'Policy Evaluation: Universal Basic Income Trials',
     rubricCriteria: ['Fiscal Sustainability', 'Labor Market Impact', 'Empirical Baseline Consistency'],
+  },
+  {
+    id: 'sandbox',
+    title: 'Sandbox — Open Topic',
+    rubricCriteria: ['Ungraded', 'No fixed source', "AI's own assessment only"],
+    ungraded: true,
   },
 ];

@@ -13,16 +13,27 @@ export default function TrackSelectPage() {
         weakest point and make you defend it.
       </p>
       <div className="mt-10 grid gap-4">
-        {TRACK_METADATA.map((track) => (
-          <Link
-            key={track.id}
-            href={`/workspace/${track.id}`}
-            className="rounded-lg border border-gray-200 p-5 transition hover:border-gray-400 hover:shadow-sm"
-          >
-            <h2 className="font-semibold">{track.title}</h2>
-            <p className="mt-1 text-sm text-gray-500">{track.rubricCriteria.join(' · ')}</p>
-          </Link>
-        ))}
+        {TRACK_METADATA.map((track) =>
+          track.ungraded ? (
+            <Link
+              key={track.id}
+              href={`/workspace/${track.id}`}
+              className="rounded-lg border border-dashed border-gray-500 p-5 text-gray-400 transition hover:border-gray-300"
+            >
+              <h2 className="font-semibold">{track.title}</h2>
+              <p className="mt-1 text-sm">{track.rubricCriteria.join(' · ')}</p>
+            </Link>
+          ) : (
+            <Link
+              key={track.id}
+              href={`/workspace/${track.id}`}
+              className="rounded-lg border border-gray-200 p-5 transition hover:border-gray-400 hover:shadow-sm"
+            >
+              <h2 className="font-semibold">{track.title}</h2>
+              <p className="mt-1 text-sm text-gray-500">{track.rubricCriteria.join(' · ')}</p>
+            </Link>
+          )
+        )}
       </div>
     </main>
   );

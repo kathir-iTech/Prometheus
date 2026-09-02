@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getTrackOrThrow } from '@/lib/curriculum';
-import { runAnalyze } from '@/lib/gemini';
+import { runAnalyze, runSandboxAnalyze } from '@/lib/gemini';
 import { checkRateLimit } from '@/lib/rate-limit';
 import type { AnalyzeRequestBody } from '@/types/argument';
 
@@ -46,6 +46,16 @@ export async function POST(req: NextRequest) {
     }
     if (studentArgument.length > MAX_ARGUMENT_LENGTH) {
       return NextResponse.json({ error: `Argument exceeds ${MAX_ARGUMENT_LENGTH} characters.` }, { status: 400 });
+    }
+
+    if (trackId === 'sandbox') {
+      let result;
+      try {
+        result = await runSandboxAnalyze(studentArgument);
+      } catch {
+        return NextResponse.json({ error: 'Analysis service is temporarily unavailable.' }, { status: 502 });
+      }
+      return NextResponse.json({ ...result, ungrounded: true }, { status: 200 });
     }
 
     const track = getTrackOrThrow(trackId);

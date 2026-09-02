@@ -16,7 +16,7 @@ export interface TrackConfig {
   fact: FactBlock;
 }
 
-export const CURRICULUM_REGISTRY: Record<TrackId, TrackConfig> = {
+export const CURRICULUM_REGISTRY: Record<Exclude<TrackId, 'sandbox'>, TrackConfig> = {
   scientific_reasoning: {
     id: 'scientific_reasoning',
     title: 'Scientific Reasoning: Climate Dynamics',
@@ -59,7 +59,7 @@ export const CURRICULUM_REGISTRY: Record<TrackId, TrackConfig> = {
 };
 
 export function getTrackOrThrow(id: string): TrackConfig {
-  const track = CURRICULUM_REGISTRY[id as TrackId];
+  const track = (CURRICULUM_REGISTRY as Record<string, TrackConfig>)[id];
   if (!track) {
     throw new Error(`Invalid track id: ${id}`);
   }

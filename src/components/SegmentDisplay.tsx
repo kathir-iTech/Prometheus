@@ -11,9 +11,14 @@ const LABEL_MAP: Record<SegmentType, { label: string; className: string }> = {
   normal: { label: 'Supported', className: 'border-green-400 bg-green-50' },
 };
 
-export function SegmentDisplay({ segments }: { segments: ArgumentSegment[] }) {
+export function SegmentDisplay({ segments, ungrounded }: { segments: ArgumentSegment[]; ungrounded?: boolean }) {
   return (
     <div className="space-y-2">
+      {ungrounded && (
+        <p className="rounded bg-gray-800 px-3 py-2 text-xs text-gray-300">
+          AI's own assessment — ungrounded, no verified source.
+        </p>
+      )}
       {segments.map((seg, i) => {
         const { label, className } = LABEL_MAP[seg.type];
         return (

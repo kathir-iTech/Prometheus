@@ -1,6 +1,6 @@
 // src/types/argument.ts
 
-export type TrackId = 'scientific_reasoning' | 'historical_analysis' | 'policy_evaluation';
+export type TrackId = 'scientific_reasoning' | 'historical_analysis' | 'policy_evaluation' | 'sandbox';
 
 export type SegmentType =
   | 'unsupported_claim'
@@ -33,6 +33,7 @@ export interface AnalyzeResponseBody {
   segments: ArgumentSegment[];
   socraticQuestion: string;
   firstPassScore: RubricScore;
+  ungrounded?: boolean; // true only in Sandbox mode
 }
 
 export interface VerdictRequestBody {
@@ -42,7 +43,8 @@ export interface VerdictRequestBody {
 
 export interface VerdictResponseBody {
   revisedScore: RubricScore;
-  sourceCitation: string;
+  sourceCitation: string | null; // null in Sandbox mode
+  ungrounded?: boolean;
 }
 
 export interface SecurityViolationResponse {

@@ -69,13 +69,15 @@ export default function WorkspacePage() {
       setRevisedScore(data.revisedScore);
       setSourceCitation(data.sourceCitation);
       setStage('verdict');
-      appendLedgerEntry({
-        trackId: trackId as TrackId,
-        timestamp: Date.now(),
-        firstPassScore: data.revisedScore ? firstPassScore! : firstPassScore!,
-        revisedScore: data.revisedScore,
-        prediction,
-      });
+      if (trackId !== 'sandbox') {
+        appendLedgerEntry({
+          trackId: trackId as TrackId,
+          timestamp: Date.now(),
+          firstPassScore: data.revisedScore ? firstPassScore! : firstPassScore!,
+          revisedScore: data.revisedScore,
+          prediction,
+        });
+      }
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -130,12 +132,14 @@ export default function WorkspacePage() {
 
       {stage === 'challenge' && (
         <div className="mt-6 space-y-4">
-          <SegmentDisplay segments={segments} />
+          <SegmentDisplay segments={segments} ungrounded={trackId === 'sandbox'} />
           <div className="rounded-md border border-gray-300 p-4">
             <p className="text-sm font-medium">Socratic question:</p>
             <p className="mt-1 text-sm">{socraticQuestion}</p>
             <p className="mt-3 rounded bg-gray-100 p-2 text-xs text-gray-500">
-              🔒 The answer is not here. You'll see the real source after you defend your argument.
+              {trackId === 'sandbox'
+                ? "🔓 Sandbox mode — this is the AI's own assessment, not checked against a verified source."
+                : "🔒 The answer is not here. You'll see the real source after you defend your argument."}
             </p>
           </div>
           <button
@@ -223,10 +227,16 @@ export default function WorkspacePage() {
             <p className="rounded bg-amber-50 p-3 text-sm text-amber-800">{remediationPointer()}</p>
           )}
 
-          <div className="rounded-md border border-green-300 bg-green-50 p-4 text-sm">
-            <p className="font-medium">Source revealed:</p>
-            <p className="mt-1">{sourceCitation}</p>
-          </div>
+          {trackId === 'sandbox' ? (
+            <div className="rounded-md border border-gray-600 bg-gray-800 p-4 text-sm text-gray-300">
+              Sandbox mode — this was the AI's own assessment. There's no fixed source to reveal.
+            </div>
+          ) : (
+            <div className="rounded-md border border-green-300 bg-green-50 p-4 text-sm">
+              <p className="font-medium">Source revealed:</p>
+              <p className="mt-1">{sourceCitation}</p>
+            </div>
+          )}
 
           <div className="pt-2">
             <button onClick={() => setShowCanvas((v) => !v)} className="text-sm text-gray-500 underline">

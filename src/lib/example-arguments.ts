@@ -9,4 +9,6 @@ export const EXAMPLE_ARGUMENTS: Record<TrackId, string> = {
     "Britain industrialized before other nations mainly because British inventors and engineers were simply more creative and innovative than their European counterparts.",
   policy_evaluation:
     'Universal basic income is a bad policy because giving people guaranteed income removes their incentive to work, so most recipients would stop working entirely.',
+  sandbox:
+    'Social media does more harm than good because constant comparison makes people unhappy and disconnects them from real life.',
 };
