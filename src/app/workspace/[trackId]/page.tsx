@@ -102,29 +102,28 @@ export default function WorkspacePage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-black text-white">
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-[500px] w-[800px] -translate-x-1/2 rounded-full bg-violet-700/20 blur-[120px]" />
-      <div className="relative mx-auto max-w-2xl px-6 py-16">
-        <h1 className="font-display text-2xl font-bold tracking-tight">{track.title}</h1>
+    <main className="relative z-10 min-h-screen bg-black text-white">
+      <div className="mx-auto max-w-2xl px-6 py-16">
+        <h1 className="font-mono text-xl font-bold tracking-tight text-cyan-300">{track.title}</h1>
 
         {error && (
-          <p className="mt-4 rounded-lg border border-red-500/30 bg-red-950/40 p-3 text-sm text-red-300">{error}</p>
+          <p className="mt-4 rounded-none border border-red-500/40 bg-red-950/30 p-3 text-sm text-red-300">{error}</p>
         )}
 
         <AnimatePresence mode="wait">
           {stage === 'claim' && (
-            <motion.div key="claim" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }} className="mt-8 space-y-4">
+            <motion.div key="claim" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} transition={{ duration: 0.3 }} className="mt-8 space-y-4">
               <textarea
-                className="h-40 w-full rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-white placeholder-white/30 backdrop-blur focus:border-violet-400/50 focus:outline-none"
+                className="h-40 w-full rounded-none border border-white/15 bg-white/[0.02] p-4 text-sm text-white placeholder-white/30 focus:border-cyan-400/50 focus:outline-none"
                 value={studentArgument}
                 onChange={(e) => setStudentArgument(e.target.value)}
                 placeholder="Write your argument…"
               />
               <div className="flex gap-3">
-                <button onClick={() => setStudentArgument(EXAMPLE_ARGUMENTS[track.id])} className="rounded-full border border-white/20 px-5 py-2.5 text-sm text-white/80 transition hover:border-white/40 hover:text-white">
+                <button onClick={() => setStudentArgument(EXAMPLE_ARGUMENTS[track.id])} className="rounded-none border border-cyan-400/40 bg-cyan-400/[0.05] px-5 py-2.5 font-mono text-xs uppercase tracking-widest text-cyan-300 transition hover:bg-cyan-400/10">
                   Try an example
                 </button>
-                <button onClick={handleSubmitClaim} disabled={!studentArgument.trim() || !!loading} className="rounded-full bg-violet-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/30 transition hover:bg-violet-500 disabled:opacity-30">
+                <button onClick={handleSubmitClaim} disabled={!studentArgument.trim() || !!loading} className="rounded-none bg-cyan-400 px-6 py-2.5 font-mono text-xs font-bold uppercase tracking-widest text-black transition hover:bg-cyan-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)] disabled:opacity-30">
                   Submit
                 </button>
               </div>
@@ -133,39 +132,39 @@ export default function WorkspacePage() {
           )}
 
           {stage === 'challenge' && (
-            <motion.div key="challenge" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }} className="mt-8 space-y-4">
+            <motion.div key="challenge" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} transition={{ duration: 0.3 }} className="mt-8 space-y-4">
               <SegmentDisplay segments={segments} ungrounded={trackId === 'sandbox'} />
-              <div className="rounded-xl border border-white/10 bg-white/5 p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-violet-300">Socratic question</p>
+              <div className="rounded-none border border-white/15 bg-white/[0.02] p-5">
+                <p className="font-mono text-[11px] font-semibold uppercase tracking-widest text-cyan-400">&gt; Socratic question</p>
                 <p className="mt-2 text-base text-white/90">{socraticQuestion}</p>
               </div>
               <SealedSource ungrounded={trackId === 'sandbox'} />
-              <button onClick={() => setStage('defend')} className="w-full rounded-full bg-violet-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-600/30 transition hover:bg-violet-500">
+              <button onClick={() => setStage('defend')} className="w-full rounded-none bg-cyan-400 px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-black transition hover:bg-cyan-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.4)]">
                 Revise my argument
               </button>
             </motion.div>
           )}
 
           {stage === 'defend' && (
-            <motion.div key="defend" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }} className="mt-8 space-y-4">
+            <motion.div key="defend" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} transition={{ duration: 0.3 }} className="mt-8 space-y-4">
               <textarea
-                className="h-40 w-full rounded-xl border border-white/10 bg-white/5 p-4 text-sm text-white placeholder-white/30 focus:border-violet-400/50 focus:outline-none"
+                className="h-40 w-full rounded-none border border-white/15 bg-white/[0.02] p-4 text-sm text-white placeholder-white/30 focus:border-cyan-400/50 focus:outline-none"
                 value={revisedArgument}
                 onChange={(e) => setRevisedArgument(e.target.value)}
                 placeholder="Rewrite your argument in response to the question above…"
               />
-              <button onClick={() => setStage('predict')} disabled={!revisedArgument.trim()} className="rounded-full bg-violet-600 px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-600/30 transition hover:bg-violet-500 disabled:opacity-30">
+              <button onClick={() => setStage('predict')} disabled={!revisedArgument.trim()} className="rounded-none bg-cyan-400 px-6 py-2.5 font-mono text-xs font-bold uppercase tracking-widest text-black transition hover:bg-cyan-300 disabled:opacity-30">
                 Continue
               </button>
             </motion.div>
           )}
 
           {stage === 'predict' && (
-            <motion.div key="predict" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }} className="mt-8 space-y-5">
-              <p className="text-sm text-white/70">Before you see your score — how strong do you think your revised argument is now?</p>
-              <input type="range" min={1} max={100} value={prediction} onChange={(e) => setPrediction(Number(e.target.value))} className="w-full accent-violet-500" />
-              <p className="text-center font-display text-4xl font-bold text-violet-300">{prediction}</p>
-              <button onClick={handleSubmitRevision} disabled={!!loading} className="w-full rounded-full bg-violet-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-600/30 transition hover:bg-violet-500 disabled:opacity-30">
+            <motion.div key="predict" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} transition={{ duration: 0.3 }} className="mt-8 space-y-5">
+              <p className="font-mono text-xs uppercase tracking-wider text-white/50">Before you see your score — how strong is your revised argument?</p>
+              <input type="range" min={1} max={100} value={prediction} onChange={(e) => setPrediction(Number(e.target.value))} className="w-full accent-cyan-400" />
+              <p className="text-center font-mono text-4xl font-bold text-cyan-300">{prediction}</p>
+              <button onClick={handleSubmitRevision} disabled={!!loading} className="w-full rounded-none bg-cyan-400 px-6 py-3 font-mono text-xs font-bold uppercase tracking-widest text-black transition hover:bg-cyan-300 disabled:opacity-30">
                 See my verdict
               </button>
               {loading && <LoadingState label={loading} />}
@@ -173,50 +172,49 @@ export default function WorkspacePage() {
           )}
 
           {stage === 'verdict' && firstPassScore && revisedScore && (
-            <motion.div key="verdict" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4 }} className="mt-8 space-y-6">
+            <motion.div key="verdict" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} transition={{ duration: 0.3 }} className="mt-8 space-y-6">
               {(['rigor', 'evidence', 'clarity'] as const).map((dim, i) => (
-                <motion.div key={dim} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15 }}>
-                  <div className="mb-1 flex justify-between text-sm text-white/70">
-                    <span className="capitalize">{dim}</span>
-                    <span className="font-semibold text-white">
+                <motion.div key={dim} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.15 }}>
+                  <div className="mb-1 flex justify-between font-mono text-xs uppercase tracking-wider text-white/50">
+                    <span>{dim}</span>
+                    <span className="font-semibold text-cyan-300">
                       {firstPassScore[dim]} → <AnimatedScore from={firstPassScore[dim]} to={revisedScore[dim]} />
                     </span>
                   </div>
-                  <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
-                    <motion.div initial={{ width: 0 }} animate={{ width: `${revisedScore[dim]}%` }} transition={{ duration: 1, delay: i * 0.15, ease: 'easeOut' }} className="h-full bg-gradient-to-r from-violet-500 to-violet-300" />
+                  <div className="h-1.5 w-full overflow-hidden bg-white/10">
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${revisedScore[dim]}%` }} transition={{ duration: 1, delay: i * 0.15, ease: 'easeOut' }} className="h-full bg-cyan-400" />
                   </div>
                 </motion.div>
               ))}
 
-              <div className="rounded-xl border border-white/10 bg-white/5 p-4 text-sm">
-                <p className="text-white/60">Your prediction: <strong className="text-white">{prediction}</strong></p>
-                <p className="mt-1 text-white/60">Actual average: <strong className="text-white">{Math.round((revisedScore.rigor + revisedScore.evidence + revisedScore.clarity) / 3)}</strong></p>
+              <div className="rounded-none border border-white/15 bg-white/[0.02] p-4 font-mono text-xs">
+                <p className="text-white/50">PREDICTED: <span className="text-white">{prediction}</span></p>
+                <p className="mt-1 text-white/50">ACTUAL: <span className="text-white">{Math.round((revisedScore.rigor + revisedScore.evidence + revisedScore.clarity) / 3)}</span></p>
               </div>
 
               {remediationPointer() && (
-                <p className="rounded-xl border border-amber-500/30 bg-amber-950/30 p-4 text-sm text-amber-200">{remediationPointer()}</p>
+                <p className="rounded-none border border-amber-500/40 bg-amber-950/20 p-4 text-sm text-amber-200">{remediationPointer()}</p>
               )}
 
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.6, duration: 0.6 }} className="relative overflow-hidden rounded-2xl border border-amber-400/40 bg-gradient-to-b from-amber-950/40 to-black p-6">
-                <motion.div initial={{ rotate: -8, opacity: 0.6 }} animate={{ rotate: 0, opacity: 1 }} transition={{ delay: 0.6, duration: 0.5 }} className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-amber-400/60">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-amber-300">
-                    <rect x="5" y="11" width="14" height="9" rx="2" />
-                    <path d="M8 11V9a4 4 0 0 1 7.4-2" />
-                  </svg>
-                </motion.div>
-                <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-amber-300">
-                  {trackId === 'sandbox' ? 'Sandbox — No Fixed Source' : 'Source Unsealed'}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: [0, 1, 0.3, 1, 0.5, 1] }}
+                transition={{ delay: 0.6, duration: 0.9, times: [0, 0.2, 0.35, 0.5, 0.65, 1] }}
+                className="hud-corners relative rounded-none border border-fuchsia-400/50 bg-fuchsia-400/[0.04] p-6 shadow-[0_0_30px_rgba(232,121,249,0.35)]"
+              >
+                <p className="text-center font-mono text-xs font-bold uppercase tracking-[0.25em] text-fuchsia-300">
+                  {trackId === 'sandbox' ? '[ SANDBOX — NO FIXED SOURCE ]' : '[ SOURCE UNSEALED ]'}
                 </p>
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1, duration: 0.6 }} className="mt-3 text-center text-sm text-white/90">
+                <p className="mt-3 text-center text-sm text-white/90">
                   {trackId === 'sandbox' ? "This was the AI's own assessment — there's no fixed source to reveal." : sourceCitation}
-                </motion.p>
+                </p>
               </motion.div>
 
-              <div className="flex items-center justify-between pt-2 text-sm text-white/50">
-                <button onClick={() => setShowCanvas((v) => !v)} className="underline hover:text-white/80">
+              <div className="flex items-center justify-between pt-2 font-mono text-xs uppercase tracking-wider text-white/40">
+                <button onClick={() => setShowCanvas((v) => !v)} className="underline hover:text-cyan-300">
                   {showCanvas ? 'Hide' : 'Show'} dependency map
                 </button>
-                <Link href="/progress" className="underline hover:text-white/80">View your progress</Link>
+                <Link href="/progress" className="underline hover:text-cyan-300">View progress</Link>
               </div>
               {showCanvas && <DependencyCanvas segments={segments} />}
             </motion.div>
