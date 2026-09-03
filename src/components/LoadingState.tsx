@@ -3,8 +3,8 @@
 
 export function LoadingState({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-3 rounded-md border border-gray-200 bg-gray-50 p-4 text-sm text-gray-600">
-      <span className="h-4 w-4 animate-spin rounded-full border-2 border-gray-400 border-t-transparent" />
+    <div className="glass flex items-center gap-3 rounded-full px-5 py-3 text-sm text-white/70 backdrop-blur-xl">
+      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-fuchsia-300" />
       {label}
     </div>
   );

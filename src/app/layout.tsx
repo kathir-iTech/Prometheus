@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { JetBrains_Mono } from 'next/font/google';
+import { Manrope } from 'next/font/google';
 import "./globals.css";
 
-const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
+const manrope = Manrope({ subsets: ['latin'], variable: '--font-sans', weight: ['400', '500', '600', '700', '800'] });
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -85,7 +85,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={jetbrainsMono.variable}>
+    <html lang="en" className={manrope.variable}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
       </head>
