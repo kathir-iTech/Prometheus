@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
+import { Space_Grotesk } from 'next/font/google';
 import "./globals.css";
+
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-display' });
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -82,7 +85,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={spaceGrotesk.variable}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
       </head>

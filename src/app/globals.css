@@ -61,3 +61,12 @@ body {
   animation: neon-pulse 1.8s ease-in-out infinite;
   will-change: box-shadow, border-color;
 }
+
+body {
+  background: #000;
+  color: #fff;
+}
+
+.font-display {
+  font-family: var(--font-display), sans-serif;
+}
