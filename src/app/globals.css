@@ -4,28 +4,31 @@
 
 :root {
   color-scheme: dark;
+  --amber: #FF9E64;
+  --amber-soft: #FFB077;
+  --amber-deep: #F39C12;
+  --canvas: #0B0C0E;
+  --glow-x: 50%;
+  --glow-y: 0%;
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html,
 body {
-  background-color: #0b0d12;
-  color: #e5e7eb;
+  background-color: #0B0C0E;
+  color: #f5f4f0;
 }
 
 body {
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    Helvetica, Arial, sans-serif;
-}
-
-body {
-  background: #000;
+  font-family: var(--font-sans), Inter, Geist Sans, SF Pro Display, ui-sans-serif, system-ui, sans-serif;
+  background: #0B0C0E;
   color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-.font-sans {
-  font-family: var(--font-sans), sans-serif;
-}
-
+/* ---------- Ambient lighting architecture ---------- */
 body::before {
   content: '';
   position: fixed;
@@ -33,13 +36,191 @@ body::before {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.35), transparent 40%),
-    radial-gradient(circle at 80% 25%, rgba(217, 70, 239, 0.3), transparent 40%),
-    radial-gradient(circle at 50% 85%, rgba(56, 189, 248, 0.28), transparent 40%);
-  filter: blur(90px);
+    radial-gradient(720px circle at 15% 0%, rgba(255, 158, 100, 0.14), transparent 65%),
+    radial-gradient(640px circle at 85% 15%, rgba(243, 156, 18, 0.10), transparent 65%),
+    radial-gradient(900px circle at 50% 100%, rgba(255, 176, 119, 0.07), transparent 65%);
+  filter: blur(120px);
 }
 
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- Glass layers ---------- */
+.glass-ethereal {
+  background: linear-gradient(135deg, rgba(28, 30, 36, 0.65), rgba(18, 20, 24, 0.45));
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-top-color: rgba(255, 255, 255, 0.08);
+  border-left-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 -12px 32px rgba(255, 158, 100, 0.04);
+}
+
+.glass-deep {
+  background: linear-gradient(150deg, rgba(30, 32, 38, 0.72), rgba(16, 18, 22, 0.6));
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-top-color: rgba(255, 255, 255, 0.09);
+  border-left-color: rgba(255, 255, 255, 0.09);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 80px rgba(255, 158, 100, 0.06);
+}
+
+/* legacy alias */
 .glass {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(28, 30, 36, 0.65), rgba(18, 20, 24, 0.45));
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-top-color: rgba(255, 255, 255, 0.08);
+  border-left-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ---------- Dynamic amber glow tracking ---------- */
+.glow-amber {
+  position: relative;
+  isolation: isolate;
+  transition: border-color 0.5s var(--ease-expo), backdrop-filter 0.5s var(--ease-expo), transform 0.5s var(--ease-expo), box-shadow 0.5s var(--ease-expo);
+}
+
+.glow-amber::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.9;
+  background: radial-gradient(
+    420px circle at var(--glow-x, 50%) var(--glow-y, 0%),
+    rgba(255, 158, 100, 0.16),
+    rgba(243, 156, 18, 0.06) 45%,
+    transparent 70%
+  );
+  transition: opacity 0.5s var(--ease-expo);
+}
+
+.glow-amber:hover::before {
+  background: radial-gradient(
+    520px circle at var(--glow-x, 50%) var(--glow-y, 20%),
+    rgba(255, 158, 100, 0.24),
+    rgba(255, 176, 119, 0.09) 45%,
+    transparent 70%
+  );
+}
+
+.glow-amber:hover {
+  border-top-color: rgba(255, 255, 255, 0.14);
+  border-left-color: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+}
+
+/* ---------- Typography ---------- */
+h1, h2, h3 {
+  letter-spacing: -0.02em;
+}
+
+.font-sans {
+  font-family: var(--font-sans), Inter, sans-serif;
+}
+
+.meta-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #6B7280;
+}
+
+/* ---------- Interactive states ---------- */
+.ease-expo {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-amber {
+  background: linear-gradient(135deg, #FFB077 0%, #FF9E64 45%, #F39C12 100%);
+  color: #1a1206;
+  box-shadow: 0 8px 28px rgba(255, 158, 100, 0.32), 0 1px 0 rgba(255,255,255,0.35) inset;
+  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-amber:hover {
+  box-shadow: 0 12px 40px rgba(255, 158, 100, 0.45), 0 1px 0 rgba(255,255,255,0.4) inset;
+  filter: brightness(1.06);
+}
+
+.btn-amber:active {
+  transform: scale(0.97);
+}
+
+.btn-ghost {
+  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-ghost:active {
+  transform: scale(0.97);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(255, 158, 100, 0.7), 0 0 24px rgba(255, 158, 100, 0.28);
+  border-radius: 12px;
+}
+
+/* range */
+input[type="range"] {
+  accent-color: #FF9E64;
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0B0C0E;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 158, 100, 0.22);
+  border-radius: 8px;
+  border: 2px solid #0B0C0E;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 158, 100, 0.38);
+}
+
+::selection {
+  background: rgba(255, 158, 100, 0.32);
+  color: #fff;
+}
+
+@keyframes amber-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px #FF9E64; }
+  50% { opacity: 0.45; box-shadow: 0 0 2px #FF9E64; }
+}
+
+.dot-live {
+  animation: amber-pulse 2.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

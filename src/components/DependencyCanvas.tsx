@@ -56,9 +56,23 @@ export function DependencyCanvas({ segments }: { segments: ArgumentSegment[] }) 
       ctx.scale(dpr, dpr);
       ctx.clearRect(0, 0, width, height);
 
+      // dark glass backdrop
+      ctx.fillStyle = 'rgba(18,20,24,0.6)';
+      ctx.fillRect(0, 0, width, height);
+
+      // faint amber ambient
+      const grad = ctx.createRadialGradient(width / 2, 0, 20, width / 2, 0, width * 0.7);
+      grad.addColorStop(0, 'rgba(255,158,100,0.10)');
+      grad.addColorStop(1, 'rgba(255,158,100,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, width, height);
+
       const positions = computeLayout(width);
 
-      ctx.strokeStyle = '#cbd5e1';
+      ctx.strokeStyle = 'rgba(255,158,100,0.45)';
+      ctx.lineWidth = 1.2;
+      ctx.shadowColor = 'rgba(255,158,100,0.35)';
+      ctx.shadowBlur = 6;
       segments.forEach((seg, i) => {
         if (seg.supportsClauseIndex !== null && positions[seg.supportsClauseIndex]) {
           const from = positions[seg.supportsClauseIndex];
@@ -69,20 +83,42 @@ export function DependencyCanvas({ segments }: { segments: ArgumentSegment[] }) 
           ctx.stroke();
         }
       });
+      ctx.shadowBlur = 0;
 
       segments.forEach((seg, i) => {
         const pos = positions[i];
         if (!pos) return;
-        ctx.fillStyle =
-          seg.type === 'normal' ? '#dcfce7' : seg.type === 'premise_conflict' ? '#fee2e2' : '#fef3c7';
-        ctx.fillRect(pos.x, pos.y, NODE_WIDTH, NODE_HEIGHT);
-        ctx.strokeStyle = '#94a3b8';
-        ctx.strokeRect(pos.x, pos.y, NODE_WIDTH, NODE_HEIGHT);
-        ctx.fillStyle = '#1e293b';
-        ctx.font = '12px sans-serif';
+        // node fill
+        if (seg.type === 'normal') ctx.fillStyle = 'rgba(16,40,30,0.92)';
+        else if (seg.type === 'premise_conflict') ctx.fillStyle = 'rgba(52,18,18,0.92)';
+        else ctx.fillStyle = 'rgba(52,34,12,0.92)';
+
+        ctx.strokeStyle =
+          seg.type === 'normal'
+            ? 'rgba(110,231,183,0.45)'
+            : seg.type === 'premise_conflict'
+              ? 'rgba(252,165,165,0.45)'
+              : 'rgba(255,158,100,0.55)';
+        ctx.lineWidth = 1;
+
+        const r = 10;
+        ctx.beginPath();
+        ctx.roundRect(pos.x, pos.y, NODE_WIDTH, NODE_HEIGHT, r);
+        ctx.fill();
+        ctx.stroke();
+
+        // top highlight
+        ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+        ctx.beginPath();
+        ctx.moveTo(pos.x + r, pos.y + 0.5);
+        ctx.lineTo(pos.x + NODE_WIDTH - r, pos.y + 0.5);
+        ctx.stroke();
+
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+        ctx.font = '12px Inter, sans-serif';
         const truncated =
           seg.text.length > MAX_LABEL_CHARS ? seg.text.slice(0, MAX_LABEL_CHARS) + '…' : seg.text;
-        ctx.fillText(truncated, pos.x + 8, pos.y + NODE_HEIGHT / 2 + 4, NODE_WIDTH - 16);
+        ctx.fillText(truncated, pos.x + 10, pos.y + NODE_HEIGHT / 2 + 4, NODE_WIDTH - 20);
       });
     }
 
@@ -108,18 +144,20 @@ export function DependencyCanvas({ segments }: { segments: ArgumentSegment[] }) 
 
   return (
     <div ref={containerRef} className="relative">
-      <p className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500">
+      <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-[#6B7280]">
         Dependency map (model-inferred — not verified logic)
       </p>
-      <canvas
-        ref={canvasRef}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={() => setHover(null)}
-        className="w-full rounded-md border border-gray-200"
-      />
+      <div className="glass-ethereal overflow-hidden rounded-2xl p-1.5">
+        <canvas
+          ref={canvasRef}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={() => setHover(null)}
+          className="w-full rounded-xl border border-white/[0.06]"
+        />
+      </div>
       {hover && (
         <div
-          className="pointer-events-none absolute z-10 max-w-xs rounded bg-gray-900 px-2 py-1 text-xs text-white shadow-lg"
+          className="glass-deep pointer-events-none absolute z-10 max-w-xs rounded-xl border border-amber-core/30 px-3 py-2 text-xs text-white shadow-amber-ring"
           style={{ left: hover.x + 12, top: hover.y + 12 }}
         >
           {hover.text}

@@ -1,14 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import "./globals.css";
+import { AppShell } from '@/components/AppShell';
 
-const manrope = Manrope({ subsets: ['latin'], variable: '--font-sans', weight: ['400', '500', '600', '700', '800'] });
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans', weight: ['400', '500', '600', '700', '800'] });
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#ffffff",
+  themeColor: "#0B0C0E",
 };
 
 export const metadata: Metadata = {
@@ -85,13 +86,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={manrope.variable}>
+    <html lang="en" className={inter.variable}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
       </head>
-      <body>
+      <body className="bg-[#0B0C0E] font-sans text-white antialiased">
         <JsonLd />
-        {children}
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   );
