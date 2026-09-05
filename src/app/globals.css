@@ -29,6 +29,8 @@ body {
 }
 
 /* ---------- Ambient lighting architecture ---------- */
+/* Static layers: fixed, painted once. Never recalculated on scroll/mousemove.
+   No will-change here — these elements do not animate. */
 body::before {
   content: '';
   position: fixed;
@@ -39,7 +41,7 @@ body::before {
     radial-gradient(720px circle at 15% 0%, rgba(255, 158, 100, 0.14), transparent 65%),
     radial-gradient(640px circle at 85% 15%, rgba(243, 156, 18, 0.10), transparent 65%),
     radial-gradient(900px circle at 50% 100%, rgba(255, 176, 119, 0.07), transparent 65%);
-  filter: blur(120px);
+  filter: blur(60px);
 }
 
 body::after {
@@ -90,10 +92,13 @@ body::after {
 }
 
 /* ---------- Dynamic amber glow tracking ---------- */
+/* Hover only shifts border tint + glow opacity (cheap paint). Deliberately no
+   backdrop-filter change on hover — recompositing large blur layers per
+   mousemove is the main jank source. */
 .glow-amber {
   position: relative;
   isolation: isolate;
-  transition: border-color 0.5s var(--ease-expo), backdrop-filter 0.5s var(--ease-expo), transform 0.5s var(--ease-expo), box-shadow 0.5s var(--ease-expo);
+  transition: border-color 0.5s var(--ease-expo);
 }
 
 .glow-amber::before {
@@ -125,8 +130,6 @@ body::after {
 .glow-amber:hover {
   border-top-color: rgba(255, 255, 255, 0.14);
   border-left-color: rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(28px) saturate(150%);
-  -webkit-backdrop-filter: blur(28px) saturate(150%);
 }
 
 /* ---------- Typography ---------- */

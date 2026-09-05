@@ -7,6 +7,10 @@ import { SectionLabel } from './SectionLabel';
 import { TokenPill } from './TokenPill';
 import type { RubricScore } from '@/types/argument';
 
+function formatSigned(n: number): string {
+  return n > 0 ? `+${n}` : `${n}`;
+}
+
 export function PreviewPane({
   firstPassScore,
   revisedScore,
@@ -32,12 +36,26 @@ export function PreviewPane({
   const delta = (a?: number, b?: number) =>
     a !== undefined && b !== undefined ? b - a : 0;
 
+  const status = hasVerdict
+    ? 'Verdict ready'
+    : firstPassScore
+      ? 'Challenged — defend next'
+      : 'Awaiting claim';
+
+  const trajectory: { l: string; v: number }[] | null = firstPassScore
+    ? [
+        { l: 'Rigor', v: firstPassScore.rigor },
+        { l: 'Evidence', v: firstPassScore.evidence },
+        { l: 'Clarity', v: firstPassScore.clarity },
+      ]
+    : null;
+
   return (
     <aside className="glass-deep glow-amber sticky top-6 hidden w-[400px] shrink-0 flex-col gap-5 self-start rounded-3xl p-6 lg:flex">
       <div className="flex items-center justify-between">
         <SectionLabel amberDot>{stageLabel}</SectionLabel>
-        <TokenPill live tone="amber">
-          {hasVerdict ? 'Verdict ready' : 'Radiant core active'}
+        <TokenPill live={hasVerdict} tone={hasVerdict ? 'amber' : 'neutral'}>
+          {status}
         </TokenPill>
       </div>
 
@@ -50,29 +68,43 @@ export function PreviewPane({
             <ScoreRing label="Evidence" from={firstPassScore!.evidence} to={revisedScore!.evidence} />
             <ScoreRing label="Clarity" from={firstPassScore!.clarity} to={revisedScore!.clarity} />
           </div>
-        ) : (
+        ) : trajectory ? (
           <div className="glass-ethereal rounded-2xl p-5">
             <div className="flex items-end justify-between gap-2">
-              {[
-                { l: 'Rigor', v: firstPassScore?.rigor ?? 12 },
-                { l: 'Evidence', v: firstPassScore?.evidence ?? 18 },
-                { l: 'Clarity', v: firstPassScore?.clarity ?? 24 },
-              ].map((b) => (
+              {trajectory.map((b) => (
                 <div key={b.l} className="flex flex-1 flex-col items-center gap-2">
                   <div className="flex h-24 w-full items-end justify-center rounded-xl bg-white/[0.03] p-1.5">
                     <div
-                      className="w-full rounded-lg bg-gradient-to-t from-[#F39C12] via-[#FF9E64] to-[#FFB077] opacity-70 transition-all duration-700 ease-expo"
-                      style={{ height: `${Math.max(b.v, 8)}%` }}
+                      className="w-full rounded-lg bg-gradient-to-t from-[#F39C12] via-[#FF9E64] to-[#FFB077] opacity-80"
+                      style={{ height: `${Math.min(Math.max(b.v, 4), 100)}%` }}
                     />
                   </div>
                   <span className="text-[10px] font-semibold uppercase tracking-widest text-[#6B7280]">
-                    {b.l}
+                    {b.l} · {b.v}
                   </span>
                 </div>
               ))}
             </div>
             <p className="mt-3 text-center text-xs text-white/40">
-              Submit your claim to ignite the trajectory.
+              First-pass scores from the analysis. Defend to move them.
+            </p>
+          </div>
+        ) : (
+          <div className="glass-ethereal rounded-2xl p-5">
+            <div className="flex items-end justify-between gap-2" aria-hidden="true">
+              {['Rigor', 'Evidence', 'Clarity'].map((l) => (
+                <div key={l} className="flex flex-1 flex-col items-center gap-2">
+                  <div className="flex h-24 w-full items-end justify-center rounded-xl bg-white/[0.03] p-1.5">
+                    <div className="w-full rounded-lg bg-white/[0.06]" style={{ height: '6%' }} />
+                  </div>
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-[#6B7280]">
+                    {l}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-3 text-center text-xs text-white/40">
+              Awaiting your claim — trajectory appears after analysis.
             </p>
           </div>
         )}
@@ -90,7 +122,7 @@ export function PreviewPane({
           </div>
           <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/[0.07]">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#FFB077] via-[#FF9E64] to-[#F39C12] shadow-[0_0_12px_rgba(255,158,100,0.5)] transition-all duration-700 ease-expo"
+              className="h-full rounded-full bg-gradient-to-r from-[#FFB077] via-[#FF9E64] to-[#F39C12]"
               style={{ width: `${prediction ?? 50}%` }}
             />
           </div>
@@ -102,15 +134,21 @@ export function PreviewPane({
           </div>
           {hasVerdict && prediction !== undefined && actual !== null && (
             <div className="mt-2 flex flex-wrap gap-1.5">
-              <TokenPill tone={Math.abs(prediction - actual) <= 10 ? 'green' : 'amber'}>
-                Δ {Math.abs(prediction - actual)} pts {Math.abs(prediction - actual) <= 10 ? '· calibrated' : '· miscalibrated'}
+              <TokenPill
+                tone={Math.abs(prediction - actual) <= 10 ? 'green' : 'amber'}
+                title="Absolute gap between your prediction and the actual average"
+              >
+                off by {Math.abs(prediction - actual)} pts
+                {Math.abs(prediction - actual) <= 10 ? ' · calibrated' : ' · miscalibrated'}
               </TokenPill>
-              {(['rigor', 'evidence', 'clarity'] as const).map((k) => (
-                <TokenPill key={k} tone="neutral">
-                  {k} {delta(firstPassScore?.[k], revisedScore?.[k]) >= 0 ? '+' : ''}
-                  {delta(firstPassScore?.[k], revisedScore?.[k])}
-                </TokenPill>
-              ))}
+              {(['rigor', 'evidence', 'clarity'] as const).map((k) => {
+                const d = delta(firstPassScore?.[k], revisedScore?.[k]);
+                return (
+                  <TokenPill key={k} tone="neutral" title={`First-pass to revised change in ${k}`}>
+                    {k} {formatSigned(d)}
+                  </TokenPill>
+                );
+              })}
             </div>
           )}
         </div>
@@ -119,7 +157,7 @@ export function PreviewPane({
       {/* Source */}
       <div>
         <SectionLabel className="mb-3">Source vault</SectionLabel>
-        <div className="rounded-2xl border border-amber-core/25 bg-gradient-to-b from-[rgba(255,176,119,0.12)] to-[rgba(243,156,18,0.05)] p-5 text-center shadow-[0_0_50px_rgba(255,158,100,0.14)] backdrop-blur-[32px]">
+        <div className="rounded-2xl border border-amber-core/25 bg-gradient-to-b from-[rgba(255,176,119,0.12)] to-[rgba(243,156,18,0.05)] p-5 text-center">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-[#FFB077]">
             {trackId === 'sandbox'
               ? 'Sandbox — No fixed source'
@@ -142,10 +180,7 @@ export function PreviewPane({
           <Link href="/progress" className="transition-colors duration-300 ease-expo hover:text-amber-core">
             View progress →
           </Link>
-          <span className="flex items-center gap-1.5">
-            <span className="h-1.5 w-1.5 rounded-full bg-amber-core shadow-[0_0_8px_#FF9E64]" />
-            Backlit · 40px blur
-          </span>
+          <span>Stored locally</span>
         </div>
       )}
     </aside>

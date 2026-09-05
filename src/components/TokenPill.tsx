@@ -17,14 +17,17 @@ export function TokenPill({
   tone = 'amber',
   live = false,
   className,
+  title,
 }: {
   children: React.ReactNode;
   tone?: Tone;
   live?: boolean;
   className?: string;
+  title?: string;
 }) {
   return (
     <span
+      title={title}
       className={cn(
         'inline-flex items-center gap-1.5 rounded-full border border-white/[0.06] bg-white/[0.04] px-2.5 py-1 text-[11px] font-medium text-white/70 backdrop-blur-xl transition-all duration-500 ease-expo',
         className

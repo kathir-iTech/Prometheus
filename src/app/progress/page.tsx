@@ -13,6 +13,10 @@ function average(scores: number[]) {
   return scores.length ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
 }
 
+function formatSigned(n: number): string {
+  return n > 0 ? `+${n}` : `${n}`;
+}
+
 export default function ProgressPage() {
   const [entries, setEntries] = useState<LedgerEntry[]>([]);
 
@@ -77,7 +81,7 @@ export default function ProgressPage() {
           <div className="mt-5 grid grid-cols-3 gap-2.5">
             {[
               [String(totalAttempts), 'Attempts'],
-              [`+${meanDelta}`, 'Avg improvement'],
+              [formatSigned(meanDelta), 'Avg improvement'],
               [String(best), 'Best average'],
             ].map(([v, l]) => (
               <div key={l} className="glass-ethereal glow-amber rounded-2xl p-4 text-center">
@@ -128,10 +132,12 @@ export default function ProgressPage() {
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {trackEntries.slice(-4).map((e, i) => {
                       const avg = average([e.revisedScore.rigor, e.revisedScore.evidence, e.revisedScore.clarity]);
+                      // Absolute calibration gap: |prediction - actual average|.
+                      // Directionless by design — use "off by" wording, not a signed Δ.
                       const cal = Math.abs(e.prediction - avg);
                       return (
-                        <TokenPill key={i} tone={cal <= 10 ? 'green' : 'amber'}>
-                          #{trackEntries.length - Math.min(trackEntries.length, 4) + i + 1} · {avg} (Δ{cal})
+                        <TokenPill key={i} tone={cal <= 10 ? 'green' : 'amber'} title={`Predicted ${e.prediction}, actual average ${avg} — calibration gap ${cal}`}>
+                          #{trackEntries.length - Math.min(trackEntries.length, 4) + i + 1} · {avg} (off by {cal})
                         </TokenPill>
                       );
                     })}

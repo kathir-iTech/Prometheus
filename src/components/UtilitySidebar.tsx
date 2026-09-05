@@ -56,7 +56,7 @@ export function UtilitySidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sticky top-0 z-30 hidden h-screen w-[72px] shrink-0 flex-col items-center gap-2 border-r border-white/[0.06] bg-[rgba(18,20,24,0.55)] py-5 backdrop-blur-[24px] md:flex">
+    <aside className="sticky top-0 z-30 hidden h-screen w-[72px] shrink-0 flex-col items-center gap-2 border-r border-white/[0.06] bg-[rgba(18,20,24,0.55)] py-5 backdrop-blur-[16px] md:flex">
       {/* Core mark */}
       <Link
         href="/"

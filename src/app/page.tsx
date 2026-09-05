@@ -1,28 +1,44 @@
 // src/app/page.tsx
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { TRACK_METADATA } from '@/lib/track-metadata';
+import { readLedger } from '@/lib/ledger';
 import { SectionLabel } from '@/components/SectionLabel';
 import { TokenPill } from '@/components/TokenPill';
 
-const TRACK_META: Record<string, { time: string; level: string; attempts: string }> = {
-  scientific_reasoning: { time: '12 min', level: 'Core', attempts: '2.4k defends' },
-  historical_analysis: { time: '15 min', level: 'Core', attempts: '1.8k defends' },
-  policy_evaluation: { time: '14 min', level: 'Advanced', attempts: '1.2k defends' },
-  sandbox: { time: 'Open', level: 'Ungraded', attempts: 'Playground' },
-};
-
 export default function TrackSelectPage() {
+  const [attemptCount, setAttemptCount] = useState<number | null>(null);
+  const [bestAverage, setBestAverage] = useState<number | null>(null);
+
+  useEffect(() => {
+    try {
+      const entries = readLedger();
+      setAttemptCount(entries.length);
+      if (entries.length > 0) {
+        const avgs = entries.map((e) =>
+          Math.round((e.revisedScore.rigor + e.revisedScore.evidence + e.revisedScore.clarity) / 3)
+        );
+        setBestAverage(Math.max(...avgs));
+      } else {
+        setBestAverage(null);
+      }
+    } catch {
+      setAttemptCount(0);
+      setBestAverage(null);
+    }
+  }, []);
+
   return (
     <main className="min-h-screen">
       <div className="mx-auto max-w-[1280px] px-5 py-8 lg:px-8 lg:py-12 lg:grid lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-8">
         {/* Expansive workspace */}
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <TokenPill live tone="amber">Socratic engine live</TokenPill>
-            <TokenPill tone="neutral">4 tracks</TokenPill>
+            <TokenPill tone="neutral">Claim → Defend → Verdict</TokenPill>
+            <TokenPill tone="neutral">{TRACK_METADATA.length} tracks</TokenPill>
             <TokenPill tone="neutral">Never reveals the answer</TokenPill>
           </div>
 
@@ -55,9 +71,7 @@ export default function TrackSelectPage() {
           </div>
 
           <div className="mt-3 grid gap-3.5">
-            {TRACK_METADATA.map((track, i) => {
-              const meta = TRACK_META[track.id] ?? { time: '—', level: '—', attempts: '—' };
-              return (
+            {TRACK_METADATA.map((track, i) => (
                 <motion.div
                   key={track.id}
                   initial={{ opacity: 0, y: 16 }}
@@ -68,18 +82,16 @@ export default function TrackSelectPage() {
                     href={`/workspace/${track.id}`}
                     className={
                       track.ungraded
-                        ? 'glass-ethereal glow-amber group block rounded-2xl border-dashed p-5 transition-all duration-500 ease-expo hover:border-amber-core/40 hover:backdrop-blur-2xl md:p-6'
-                        : 'glass-ethereal glow-amber group block rounded-2xl p-5 transition-all duration-500 ease-expo hover:border-white/[0.12] hover:backdrop-blur-2xl md:p-6'
+                        ? 'glass-ethereal glow-amber group block rounded-2xl border-dashed p-5 transition-colors duration-500 ease-expo hover:border-amber-core/40 md:p-6'
+                        : 'glass-ethereal glow-amber group block rounded-2xl p-5 transition-colors duration-500 ease-expo hover:border-white/[0.12] md:p-6'
                     }
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="text-[10px] font-semibold uppercase tracking-widest text-amber-core">
-                            {String(i + 1).padStart(2, '0')} — {meta.level}
-                          </span>
-                          <span className="text-[10px] uppercase tracking-widest text-white/25">· {meta.time}</span>
-                        </div>
+                        <span className="text-[10px] font-semibold uppercase tracking-widest text-white/30">
+                          {String(i + 1).padStart(2, '0')}
+                          {track.ungraded ? ' — Open' : ''}
+                        </span>
                         <h2 className="mt-1.5 text-lg font-bold tracking-tight text-white transition-colors duration-300 group-hover:text-[#FFD9B8] md:text-xl">
                           {track.title}
                         </h2>
@@ -92,22 +104,21 @@ export default function TrackSelectPage() {
                           ))}
                         </div>
                       </div>
-                      <span className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.03] text-white/50 transition-all duration-500 ease-expo group-hover:border-amber-core/50 group-hover:bg-amber-core/10 group-hover:text-amber-core group-hover:shadow-[0_0_20px_rgba(255,158,100,0.35)]">
+                      <span className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.03] text-white/50 transition-colors duration-500 ease-expo group-hover:border-amber-core/50 group-hover:bg-amber-core/10 group-hover:text-amber-core">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M5 12h14M13 6l6 6-6 6" />
                         </svg>
                       </span>
                     </div>
-                    <div className="mt-4 flex items-center justify-between border-t border-white/[0.06] pt-3 text-[11px] text-white/35">
-                      <span>{meta.attempts}</span>
-                      <span className="opacity-0 transition-all duration-500 ease-expo group-hover:opacity-100 group-hover:text-amber-core">
+                    <div className="mt-4 flex items-center justify-end border-t border-white/[0.06] pt-3 text-[11px] text-white/35">
+                      <span className="opacity-0 transition-opacity duration-500 ease-expo group-hover:opacity-100 group-hover:text-amber-core">
                         Enter arena →
                       </span>
                     </div>
                   </Link>
                 </motion.div>
-              );
-            })}
+              )
+            )}
           </div>
 
           {/* Mobile companion (visible < lg) */}
@@ -160,23 +171,40 @@ export default function TrackSelectPage() {
           </div>
 
           <div className="glass-ethereal rounded-3xl p-5">
-            <SectionLabel>Live pulse</SectionLabel>
-            <div className="mt-3 grid grid-cols-3 gap-2 text-center">
-              {[
-                ['2.4k', 'Defends'],
-                ['+27', 'Avg Δ'],
-                ['4', 'Tracks'],
-              ].map(([v, l]) => (
-                <div key={l} className="rounded-2xl border border-white/[0.06] bg-white/[0.03] py-3">
-                  <p className="text-lg font-bold tracking-tight text-white">{v}</p>
-                  <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-widest text-[#6B7280]">{l}</p>
+            <SectionLabel>Your progress on this device</SectionLabel>
+            {attemptCount === null ? (
+              <p className="mt-3 text-[13px] text-white/45">Reading your local ledger…</p>
+            ) : attemptCount === 0 ? (
+              <div className="mt-3">
+                <p className="text-[13px] leading-relaxed text-white/55">
+                  No attempts yet on this browser. Progress stays on this device.
+                </p>
+                <Link
+                  href="/progress"
+                  className="mt-3 inline-block text-[13px] text-amber-core hover:underline"
+                >
+                  How progress works →
+                </Link>
+              </div>
+            ) : (
+              <div className="mt-3 grid grid-cols-2 gap-2 text-center">
+                <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] py-3">
+                  <p className="text-lg font-bold tracking-tight text-white">{attemptCount}</p>
+                  <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-widest text-[#6B7280]">
+                    Your attempts
+                  </p>
                 </div>
-              ))}
-            </div>
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              <TokenPill live tone="amber">Core backlit</TokenPill>
-              <TokenPill tone="neutral">40px blur</TokenPill>
-            </div>
+                <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] py-3">
+                  <p className="text-lg font-bold tracking-tight text-white">{bestAverage ?? '—'}</p>
+                  <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-widest text-[#6B7280]">
+                    Your best avg
+                  </p>
+                </div>
+              </div>
+            )}
+            <p className="mt-3 text-[11px] leading-relaxed text-white/35">
+              Stored locally · clears with site data
+            </p>
           </div>
         </aside>
       </div>

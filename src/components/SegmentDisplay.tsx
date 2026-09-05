@@ -26,7 +26,7 @@ export function SegmentDisplay({ segments, ungrounded }: { segments: ArgumentSeg
         return (
           <div
             key={i}
-            className={`glow-amber rounded-2xl border p-4 text-sm backdrop-blur-[20px] transition-all duration-500 ease-expo hover:border-white/[0.12] ${meta.card} ${
+            className={`glow-amber rounded-2xl border p-4 text-sm backdrop-blur-[12px] transition-colors duration-500 ease-expo hover:border-white/[0.12] ${meta.card} ${
               isFlagged
                 ? 'border-t-white/[0.08] border-l-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.35),0_0_28px_rgba(255,158,100,0.08)]'
                 : ''

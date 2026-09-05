@@ -188,7 +188,8 @@ export default function WorkspacePage() {
           ) : (
             <button
               onClick={() => setStage('claim')}
-              className="glass-ethereal group mb-5 w-full rounded-2xl p-4 text-left transition-all duration-500 ease-expo hover:border-white/[0.12]"
+              aria-label="Edit your claim"
+              className="glass-ethereal group mb-5 w-full rounded-2xl p-4 text-left transition-colors duration-500 ease-expo hover:border-white/[0.12]"
             >
               <span className="mb-1 block text-[10px] font-semibold uppercase tracking-widest text-[#6B7280]">
                 Your claim — tap to edit
@@ -200,14 +201,14 @@ export default function WorkspacePage() {
           )}
 
           {/* CHALLENGE */}
-          <AnimatePresence>
+          <AnimatePresence initial={false}>
             {stage === 'challenge' && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="space-y-3.5 overflow-hidden"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="space-y-3.5"
               >
                 <div>
                   <SectionLabel className="mb-2">Weakest-point scan</SectionLabel>
@@ -241,14 +242,14 @@ export default function WorkspacePage() {
           </AnimatePresence>
 
           {/* DEFEND */}
-          <AnimatePresence>
+          <AnimatePresence initial={false}>
             {stage === 'defend' && (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="space-y-3.5 overflow-hidden"
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="space-y-3.5"
               >
                 <div>
                   <SectionLabel className="mb-2" amberDot>Your defense — revise fully</SectionLabel>
@@ -337,7 +338,7 @@ export default function WorkspacePage() {
                 initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                className="rounded-3xl border border-amber-core/25 bg-gradient-to-b from-[rgba(255,176,119,0.12)] to-[rgba(243,156,18,0.05)] p-6 text-center shadow-[0_0_50px_rgba(255,158,100,0.16)] backdrop-blur-[32px] lg:hidden"
+                className="rounded-3xl border border-amber-core/25 bg-gradient-to-b from-[rgba(255,176,119,0.12)] to-[rgba(243,156,18,0.05)] p-6 text-center backdrop-blur-[24px] lg:hidden"
               >
                 <p className="text-[10px] font-semibold uppercase tracking-widest text-[#FFB077]">
                   {trackId === 'sandbox' ? 'Sandbox — No Fixed Source' : 'Source Unsealed'}
@@ -392,8 +393,8 @@ export default function WorkspacePage() {
         {!revisedScore && (
           <div className="mt-6 lg:hidden">
             <div className="glass-ethereal rounded-2xl p-4 text-center text-xs text-white/40">
-              Your trajectory, calibration meter and sealed source appear here on desktop —{' '}
-              <span className="text-amber-core">backlit at 40px blur</span>.
+              Your trajectory, calibration meter and sealed source appear alongside on larger
+              screens.
             </div>
           </div>
         )}

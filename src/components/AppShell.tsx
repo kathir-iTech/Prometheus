@@ -9,19 +9,39 @@ import { UtilitySidebar } from './UtilitySidebar';
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  // Dynamic amber glow tracking: drives --glow-x / --glow-y on .glow-amber cards
+  // Dynamic amber glow tracking: drives --glow-x / --glow-y on .glow-amber cards.
+  // Direct DOM writes only (no React state) + rAF throttle: at most one
+  // closest()+getBoundingClientRect()+setProperty per frame, no re-renders.
   useEffect(() => {
-    function onMove(e: MouseEvent) {
+    let raf = 0;
+    let pending: MouseEvent | null = null;
+
+    function apply() {
+      raf = 0;
+      if (!pending) return;
+      const e = pending;
+      pending = null;
       const el = (e.target as HTMLElement)?.closest?.('.glow-amber') as HTMLElement | null;
       if (!el) return;
       const r = el.getBoundingClientRect();
-      const x = ((e.clientX - r.left) / Math.max(r.width, 1)) * 100;
-      const y = ((e.clientY - r.top) / Math.max(r.height, 1)) * 100;
+      if (r.width < 1 || r.height < 1) return;
+      const x = ((e.clientX - r.left) / r.width) * 100;
+      const y = ((e.clientY - r.top) / r.height) * 100;
       el.style.setProperty('--glow-x', `${x.toFixed(1)}%`);
       el.style.setProperty('--glow-y', `${y.toFixed(1)}%`);
     }
+
+    function onMove(e: MouseEvent) {
+      pending = e;
+      if (!raf) raf = requestAnimationFrame(apply);
+    }
+
     window.addEventListener('mousemove', onMove, { passive: true });
-    return () => window.removeEventListener('mousemove', onMove);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      if (raf) cancelAnimationFrame(raf);
+      pending = null;
+    };
   }, [pathname]);
 
   return (
@@ -29,7 +49,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <UtilitySidebar />
 
       {/* Mobile top rail */}
-      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-white/[0.06] bg-[rgba(11,12,14,0.72)] px-5 py-3 backdrop-blur-[24px] md:hidden">
+      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-white/[0.06] bg-[rgba(11,12,14,0.72)] px-5 py-3 backdrop-blur-[16px] md:hidden">
         <Link href="/" className="flex items-center gap-2.5">
           <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-br from-[#FFB077] to-[#F39C12] shadow-[0_0_16px_rgba(255,158,100,0.7)]" />
           <span className="text-sm font-bold tracking-tight text-white">VivaMind</span>
