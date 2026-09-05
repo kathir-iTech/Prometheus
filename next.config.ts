@@ -1,14 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   experimental: {
-    optimizePackageImports: ["@google/genai"],
+    optimizePackageImports: ["@google/generative-ai"],
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error", "warn"] } : false,

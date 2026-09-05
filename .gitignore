@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local standalone artifacts (not part of submission)
+glass-standalone.*
+glass-track-standalone.*
+track-cyber.png
+verdict-cyber-fuchsia.png
+verdict-screenshot.png
+workspace-restructure-verdict.png
