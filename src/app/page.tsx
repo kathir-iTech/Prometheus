@@ -128,7 +128,7 @@ export default function TrackSelectPage() {
               {[
                 ['Claim', 'Write your argument in 3–6 sentences.'],
                 ['Challenge', 'VivaMind isolates the weakest clause and asks one question.'],
-                ['Defend', 'Revise your argument and predict your score (1–100).'],
+                ['Defend', 'Revise your argument and predict your own score (1–100) — the gap between your guess and the real score is the whole point.'],
                 ['Verdict', 'Trajectory revealed, source unsealed.'],
               ].map(([t, d]) => (
                 <li key={t} className="flex gap-3">
@@ -150,7 +150,7 @@ export default function TrackSelectPage() {
               {[
                 ['01', 'Claim', 'Write your argument in 3–6 sentences.'],
                 ['02', 'Challenge', 'VivaMind isolates the weakest clause and asks one question.'],
-                ['03', 'Defend', 'Revise your argument and predict your score (1–100).'],
+                ['03', 'Defend', 'Revise your argument and predict your own score (1–100) — the gap between your guess and the real score is the whole point.'],
                 ['04', 'Verdict', 'Rigor / Evidence / Clarity trajectory + source.'],
               ].map(([n, t, d]) => (
                 <li key={n} className="flex gap-3.5">

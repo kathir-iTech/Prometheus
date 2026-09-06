@@ -26,7 +26,7 @@ function SealedSourceComponent({ ungrounded }: { ungrounded?: boolean }) {
         {ungrounded ? 'Ungrounded — Sandbox' : 'Source Sealed'}
       </p>
       <p className="mt-1 text-xs text-white/40">
-        {ungrounded ? "AI's own assessment — no verified source." : "Unlocks after you defend your argument."}
+        {ungrounded ? "AI's own assessment — no verified source." : "Unlocks after you defend your argument — hidden so you can't just copy the answer instead of reasoning it out."}
       </p>
     </motion.div>
   );

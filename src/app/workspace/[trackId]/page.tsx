@@ -305,10 +305,15 @@ export default function WorkspacePage() {
               className="space-y-4"
             >
               {/* Compact score strip for < lg (PreviewPane hidden) */}
-              <div className="glass-ethereal flex justify-around rounded-2xl p-5 lg:hidden">
-                <ScoreRing label="Rigor" from={firstPassScore.rigor} to={revisedScore.rigor} />
-                <ScoreRing label="Evidence" from={firstPassScore.evidence} to={revisedScore.evidence} />
-                <ScoreRing label="Clarity" from={firstPassScore.clarity} to={revisedScore.clarity} />
+              <div className="lg:hidden">
+                <p className="mb-2 text-center text-xs text-white/40">
+                  Three dimensions of a strong argument — how your revision scored on each.
+                </p>
+                <div className="glass-ethereal flex justify-around rounded-2xl p-5">
+                  <ScoreRing label="Rigor" from={firstPassScore.rigor} to={revisedScore.rigor} />
+                  <ScoreRing label="Evidence" from={firstPassScore.evidence} to={revisedScore.evidence} />
+                  <ScoreRing label="Clarity" from={firstPassScore.clarity} to={revisedScore.clarity} />
+                </div>
               </div>
 
               <div className="glass-ethereal rounded-2xl p-4">
@@ -326,6 +331,10 @@ export default function WorkspacePage() {
                       ? 'well calibrated'
                       : 'recalibrate next round'}
                   </span>
+                </p>
+                <p className="mt-2 text-xs leading-relaxed text-white/40">
+                  This checks how well you know your own writing — a big gap means your confidence and
+                  your actual reasoning don&apos;t match yet.
                 </p>
               </div>
 

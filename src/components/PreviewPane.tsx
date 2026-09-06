@@ -64,10 +64,15 @@ function PreviewPaneComponent({
       <div>
         <SectionLabel className="mb-3">Rubric trajectory</SectionLabel>
         {hasVerdict ? (
-          <div className="glass-ethereal flex items-center justify-around rounded-2xl px-2 py-5">
-            <ScoreRing label="Rigor" from={firstPassScore!.rigor} to={revisedScore!.rigor} />
-            <ScoreRing label="Evidence" from={firstPassScore!.evidence} to={revisedScore!.evidence} />
-            <ScoreRing label="Clarity" from={firstPassScore!.clarity} to={revisedScore!.clarity} />
+          <div className="glass-ethereal rounded-2xl px-2 py-5">
+            <p className="mb-2 text-center text-xs text-white/40">
+              Three dimensions of a strong argument — how your revision scored on each.
+            </p>
+            <div className="flex items-center justify-around">
+              <ScoreRing label="Rigor" from={firstPassScore!.rigor} to={revisedScore!.rigor} />
+              <ScoreRing label="Evidence" from={firstPassScore!.evidence} to={revisedScore!.evidence} />
+              <ScoreRing label="Clarity" from={firstPassScore!.clarity} to={revisedScore!.clarity} />
+            </div>
           </div>
         ) : trajectory ? (
           <div className="glass-ethereal rounded-2xl p-5">
@@ -171,7 +176,7 @@ function PreviewPaneComponent({
               ? "This was the AI's own assessment."
               : hasVerdict
                 ? sourceCitation
-                : 'Defend your argument to unlock the withheld evidence.'}
+                : "Defend your argument to unlock the withheld evidence — hidden so you can't just copy the answer instead of reasoning it out."}
           </p>
         </div>
       </div>
