@@ -1,10 +1,11 @@
 'use client';
 
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 
 const STEPS = ['Claim', 'Challenge', 'Defend', 'Verdict'];
 
-export function ProgressRail({ activeIndex }: { activeIndex: number }) {
+function ProgressRailComponent({ activeIndex }: { activeIndex: number }) {
   return (
     <div className="mb-8 flex items-center">
       {STEPS.map((step, i) => (
@@ -51,3 +52,5 @@ export function ProgressRail({ activeIndex }: { activeIndex: number }) {
     </div>
   );
 }
+
+export const ProgressRail = memo(ProgressRailComponent);

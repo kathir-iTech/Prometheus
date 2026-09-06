@@ -1,6 +1,7 @@
 // src/components/SegmentDisplay.tsx
 'use client';
 
+import { memo } from 'react';
 import type { ArgumentSegment, SegmentType } from '@/types/argument';
 import { TokenPill } from './TokenPill';
 
@@ -12,7 +13,7 @@ const LABEL_MAP: Record<SegmentType, { label: string; pill: 'amber' | 'green' | 
   normal: { label: 'Supported', pill: 'green', card: 'border-emerald-300/25 bg-emerald-400/10 text-emerald-100' },
 };
 
-export function SegmentDisplay({ segments, ungrounded }: { segments: ArgumentSegment[]; ungrounded?: boolean }) {
+function SegmentDisplayComponent({ segments, ungrounded }: { segments: ArgumentSegment[]; ungrounded?: boolean }) {
   return (
     <div className="space-y-2.5">
       {ungrounded && (
@@ -44,3 +45,5 @@ export function SegmentDisplay({ segments, ungrounded }: { segments: ArgumentSeg
     </div>
   );
 }
+
+export const SegmentDisplay = memo(SegmentDisplayComponent);

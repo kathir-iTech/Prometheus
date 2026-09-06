@@ -1,9 +1,10 @@
 // src/components/SealedSource.tsx
 'use client';
 
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 
-export function SealedSource({ ungrounded }: { ungrounded?: boolean }) {
+function SealedSourceComponent({ ungrounded }: { ungrounded?: boolean }) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.97 }}
@@ -30,3 +31,5 @@ export function SealedSource({ ungrounded }: { ungrounded?: boolean }) {
     </motion.div>
   );
 }
+
+export const SealedSource = memo(SealedSourceComponent);

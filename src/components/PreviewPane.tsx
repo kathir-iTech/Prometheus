@@ -1,6 +1,7 @@
 // src/components/PreviewPane.tsx
 'use client';
 
+import { memo } from 'react';
 import Link from 'next/link';
 import { ScoreRing } from './ScoreRing';
 import { SectionLabel } from './SectionLabel';
@@ -11,7 +12,7 @@ function formatSigned(n: number): string {
   return n > 0 ? `+${n}` : `${n}`;
 }
 
-export function PreviewPane({
+function PreviewPaneComponent({
   firstPassScore,
   revisedScore,
   prediction,
@@ -186,3 +187,5 @@ export function PreviewPane({
     </aside>
   );
 }
+
+export const PreviewPane = memo(PreviewPaneComponent);

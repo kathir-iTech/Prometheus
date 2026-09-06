@@ -1,7 +1,7 @@
 // src/components/DependencyCanvas.tsx
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import type { ArgumentSegment } from '@/types/argument';
 
 const NODE_WIDTH = 160;
@@ -10,7 +10,7 @@ const H_GAP = 40;
 const V_GAP = 70;
 const MAX_LABEL_CHARS = 22;
 
-export function DependencyCanvas({ segments }: { segments: ArgumentSegment[] }) {
+function DependencyCanvasComponent({ segments }: { segments: ArgumentSegment[] }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [hover, setHover] = useState<{ x: number; y: number; text: string } | null>(null);
@@ -166,3 +166,5 @@ export function DependencyCanvas({ segments }: { segments: ArgumentSegment[] }) 
     </div>
   );
 }
+
+export const DependencyCanvas = memo(DependencyCanvasComponent);

@@ -1,10 +1,10 @@
 'use client';
 
-import { useId } from 'react';
+import { memo, useId } from 'react';
 import { motion } from 'framer-motion';
 import { AnimatedScore } from './AnimatedScore';
 
-export function ScoreRing({ label, from, to }: { label: string; from: number; to: number }) {
+function ScoreRingComponent({ label, from, to }: { label: string; from: number; to: number }) {
   const radius = 34;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (Math.max(to, 2) / 100) * circumference;
@@ -41,3 +41,5 @@ export function ScoreRing({ label, from, to }: { label: string; from: number; to
     </div>
   );
 }
+
+export const ScoreRing = memo(ScoreRingComponent);
