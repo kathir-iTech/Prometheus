@@ -109,6 +109,8 @@ export default function WorkspacePage() {
     return `Still worth another look: "${flagged.text}"`;
   }
 
+  const remediation = remediationPointer();
+
   return (
     <main className="min-h-screen">
       <div className="mx-auto max-w-[1280px] px-5 py-7 lg:px-8 lg:py-10 lg:grid lg:grid-cols-[minmax(0,1fr)_400px] lg:gap-8">
@@ -327,9 +329,9 @@ export default function WorkspacePage() {
                 </p>
               </div>
 
-              {remediationPointer() && (
+              {remediation && (
                 <p className="rounded-2xl border border-amber-core/25 bg-amber-core/[0.08] p-4 text-sm leading-relaxed text-amber-100 backdrop-blur-[20px]">
-                  {remediationPointer()}
+                  {remediation}
                 </p>
               )}
 

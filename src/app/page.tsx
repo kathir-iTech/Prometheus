@@ -127,8 +127,8 @@ export default function TrackSelectPage() {
             <ol className="mt-3 space-y-3 text-sm text-white/65">
               {[
                 ['Claim', 'Write your argument in 3–6 sentences.'],
-                ['Challenge', 'VivaMind isolates the weakest clause + asks one question.'],
-                ['Defend', 'Revise + predict your score (1–100).'],
+                ['Challenge', 'VivaMind isolates the weakest clause and asks one question.'],
+                ['Defend', 'Revise your argument and predict your score (1–100).'],
                 ['Verdict', 'Trajectory revealed, source unsealed.'],
               ].map(([t, d]) => (
                 <li key={t} className="flex gap-3">
@@ -148,9 +148,9 @@ export default function TrackSelectPage() {
             <SectionLabel amberDot>How a round works</SectionLabel>
             <ol className="mt-4 space-y-4">
               {[
-                ['01', 'Claim', 'Write 3–6 sentences. Try an example to start fast.'],
-                ['02', 'Challenge', 'Weakest point flagged. One Socratic question.'],
-                ['03', 'Defend', 'Revise + calibrate with a 1–100 prediction.'],
+                ['01', 'Claim', 'Write your argument in 3–6 sentences.'],
+                ['02', 'Challenge', 'VivaMind isolates the weakest clause and asks one question.'],
+                ['03', 'Defend', 'Revise your argument and predict your score (1–100).'],
                 ['04', 'Verdict', 'Rigor / Evidence / Clarity trajectory + source.'],
               ].map(([n, t, d]) => (
                 <li key={n} className="flex gap-3.5">
