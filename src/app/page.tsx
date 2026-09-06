@@ -90,7 +90,7 @@ export default function TrackSelectPage() {
                       <div className="min-w-0">
                         <span className="text-[10px] font-semibold uppercase tracking-widest text-white/30">
                           {String(i + 1).padStart(2, '0')}
-                          {track.ungraded ? ' — Open' : ''}
+                          {track.ungraded ? ' — Ungraded' : ''}
                         </span>
                         <h2 className="mt-1.5 text-lg font-bold tracking-tight text-white transition-colors duration-300 group-hover:text-[#FFD9B8] md:text-xl">
                           {track.title}
