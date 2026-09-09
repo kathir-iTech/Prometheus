@@ -175,7 +175,7 @@ export default function ProgressPage() {
               })}
             </div>
             <p className="mt-4 border-t border-white/[0.06] pt-3 text-center text-[11px] text-white/35">
-              Kept on your device — nothing about your arguments is sent anywhere else.
+              Your scores and progress stay on this device — the text you submit is sent to Gemini for analysis, and nothing is stored on a server afterward.
             </p>
           </div>
         </aside>

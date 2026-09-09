@@ -203,7 +203,7 @@ export default function TrackSelectPage() {
               </div>
             )}
             <p className="mt-3 text-[11px] leading-relaxed text-white/35">
-              Kept on your device — nothing about your arguments is sent anywhere else.
+              Your scores and progress stay on this device — the text you submit is sent to Gemini for analysis, and nothing is stored on a server afterward.
             </p>
           </div>
         </aside>

@@ -34,15 +34,18 @@ Core loop: **Claim → Challenge → Defend → Predict → Verdict**
   citation from the registry — never model-generated.
 - Model fallback chain: `gemini-3.6-flash` → `gemini-3.5-flash` →
   `gemini-3.1-flash-lite`, configurable via `GEMINI_MODEL_FALLBACK_CHAIN`.
-- Progress is stored locally per track (`localStorage`) — nothing about a
-  student's arguments leaves their device.
+- Progress and scores are stored locally per track (`localStorage`). The
+  argument text itself is sent to Gemini for analysis — that's required for
+  the AI to work — but nothing is stored server-side afterward: no account,
+  no database, no cross-device sync.
 
 ## Known limitations (documented, not hidden)
 
 - The leak guard is keyword-level, not semantic — it stops verbatim leaks, not
   a model paraphrasing the withheld fact.
 - No backend database — progress resets in Incognito or on cache clear.
-  Deliberate: makes the "nothing leaves the device" claim literally true.
+  Deliberate: no account, no server-side storage, no cross-device sync of
+  scores or history.
 
 ## Run
 
