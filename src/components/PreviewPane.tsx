@@ -186,7 +186,7 @@ function PreviewPaneComponent({
           <Link href="/progress" className="transition-colors duration-300 ease-expo hover:text-amber-core">
             View progress →
           </Link>
-          <span>Stored locally</span>
+          <span>Kept on your device — nothing about your arguments is sent anywhere else.</span>
         </div>
       )}
     </aside>

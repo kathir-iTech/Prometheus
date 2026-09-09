@@ -175,7 +175,7 @@ export default function ProgressPage() {
               })}
             </div>
             <p className="mt-4 border-t border-white/[0.06] pt-3 text-center text-[11px] text-white/35">
-              Stored locally · clears with site data
+              Kept on your device — nothing about your arguments is sent anywhere else.
             </p>
           </div>
         </aside>

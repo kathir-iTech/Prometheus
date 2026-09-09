@@ -203,7 +203,7 @@ export default function TrackSelectPage() {
               </div>
             )}
             <p className="mt-3 text-[11px] leading-relaxed text-white/35">
-              Stored locally · clears with site data
+              Kept on your device — nothing about your arguments is sent anywhere else.
             </p>
           </div>
         </aside>
