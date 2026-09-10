@@ -2,9 +2,10 @@
 'use client';
 
 import { memo } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 function SealedSourceComponent({ ungrounded }: { ungrounded?: boolean }) {
+  const reduceMotion = useReducedMotion();
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.97 }}
@@ -13,7 +14,7 @@ function SealedSourceComponent({ ungrounded }: { ungrounded?: boolean }) {
       className="glass-ethereal glow-amber rounded-2xl p-6 text-center"
     >
       <motion.div
-        animate={{ opacity: [0.5, 1, 0.5] }}
+        animate={reduceMotion ? undefined : { opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
         className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-amber-core/30 bg-amber-core/[0.08] shadow-[0_0_24px_rgba(255,158,100,0.22)]"
       >

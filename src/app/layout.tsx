@@ -8,7 +8,6 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-sans', weight: ['400
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
   themeColor: "#0B0C0E",
 };
 
@@ -19,21 +18,13 @@ export const metadata: Metadata = {
   },
   description:
     "VivaMind is a Socratic argumentation engine. Students submit an argument, the system flags its weakest point and asks one question — it never states the missing evidence.",
-  metadataBase: new URL("https://vivamind.local"),
+  metadataBase: new URL("https://thoughtmirror.vercel.app"),
   openGraph: {
     title: "VivaMind — Socratic Argumentation Engine",
     description:
       "VivaMind is a Socratic argumentation engine. Students submit an argument, the system flags its weakest point and asks one question.",
-    url: "https://vivamind.local",
+    url: "https://thoughtmirror.vercel.app",
     siteName: "VivaMind",
-    images: [
-      {
-        url: "/og.png",
-        width: 1200,
-        height: 630,
-        alt: "VivaMind — Socratic argumentation engine",
-      },
-    ],
     locale: "en_US",
     type: "website",
   },
@@ -42,7 +33,6 @@ export const metadata: Metadata = {
     title: "VivaMind — Socratic Argumentation Engine",
     description:
       "VivaMind is a Socratic argumentation engine. Students submit an argument, the system flags its weakest point and asks one question.",
-    images: ["/og.png"],
   },
   authors: [{ name: "VivaMind" }],
   category: "education",

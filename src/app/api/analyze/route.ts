@@ -8,6 +8,9 @@ import type { AnalyzeRequestBody } from '@/types/argument';
 
 const MAX_ARGUMENT_LENGTH = 5000;
 
+// Room for the model fallback chain (12s per call) within the function limit.
+export const maxDuration = 30;
+
 // Leak guard: checks the MODEL'S generated question against the withheld
 // fact's keywords — never the student's own argument text. Excludes any
 // keyword the student already used in their own submission (shared

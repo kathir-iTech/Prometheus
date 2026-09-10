@@ -19,7 +19,6 @@ function PreviewPaneComponent({
   sourceCitation,
   trackId,
   stageLabel = 'Live preview',
-  compact = false,
 }: {
   firstPassScore?: RubricScore | null;
   revisedScore?: RubricScore | null;
@@ -27,7 +26,6 @@ function PreviewPaneComponent({
   sourceCitation?: string;
   trackId?: string;
   stageLabel?: string;
-  compact?: boolean;
 }) {
   const hasVerdict = !!(firstPassScore && revisedScore);
   const actual = revisedScore
@@ -181,16 +179,14 @@ function PreviewPaneComponent({
         </div>
       </div>
 
-      {!compact && (
-        <div className="border-t border-white/[0.06] pt-4">
-          <Link href="/progress" className="text-[12px] text-white/40 transition-colors duration-300 ease-expo hover:text-amber-core">
-            View progress →
-          </Link>
-          <p className="mt-1.5 text-[11px] leading-relaxed text-white/35">
-            Progress stays on this device. Submitted text is sent to Gemini for analysis only.
-          </p>
-        </div>
-      )}
+      <div className="border-t border-white/[0.06] pt-4">
+        <Link href="/progress" className="text-[12px] text-white/40 transition-colors duration-300 ease-expo hover:text-amber-core">
+          View progress →
+        </Link>
+        <p className="mt-1.5 text-[11px] leading-relaxed text-white/35">
+          Progress stays on this device. Submitted text is sent to Gemini for analysis only.
+        </p>
+      </div>
     </aside>
   );
 }

@@ -8,6 +8,9 @@ import type { VerdictRequestBody } from '@/types/argument';
 
 const MAX_ARGUMENT_LENGTH = 5000;
 
+// Room for the model fallback chain (12s per call) within the function limit.
+export const maxDuration = 30;
+
 export async function POST(req: NextRequest) {
   try {
     const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
