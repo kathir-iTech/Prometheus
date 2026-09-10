@@ -31,7 +31,7 @@ export const TRACK_METADATA: TrackMetadata[] = [
   {
     id: 'sandbox',
     title: 'Sandbox — Open Topic',
-    rubricCriteria: ['Ungraded', 'No fixed source', "AI's own assessment only"],
+    rubricCriteria: ['No fixed source', "AI's own assessment only"],
     ungraded: true,
   },
 ];

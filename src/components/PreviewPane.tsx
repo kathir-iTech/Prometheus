@@ -182,11 +182,13 @@ function PreviewPaneComponent({
       </div>
 
       {!compact && (
-        <div className="flex items-center justify-between border-t border-white/[0.06] pt-4 text-[12px] text-white/40">
-          <Link href="/progress" className="transition-colors duration-300 ease-expo hover:text-amber-core">
+        <div className="border-t border-white/[0.06] pt-4">
+          <Link href="/progress" className="text-[12px] text-white/40 transition-colors duration-300 ease-expo hover:text-amber-core">
             View progress →
           </Link>
-          <span>Your scores and progress stay on this device — the text you submit is sent to Gemini for analysis, and nothing is stored on a server afterward.</span>
+          <p className="mt-1.5 text-[11px] leading-relaxed text-white/35">
+            Progress stays on this device. Submitted text is sent to Gemini for analysis only.
+          </p>
         </div>
       )}
     </aside>
